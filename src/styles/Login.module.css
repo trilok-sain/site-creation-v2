@@ -1,0 +1,224 @@
+.container{
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.left_div{
+    flex: 1;
+    width: 50vw;
+}
+
+.image_div{
+    background: url("../../public/login22.png") no-repeat center center;
+    background-size: cover;
+    width: 100%;
+    height: 100vh;
+}
+
+.right_div{
+    width: 100%;
+    height: 100vh;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.form_div{
+    width: 90%;
+    display: flex;
+    /* height: 60vh; */
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: 1rem 0;
+    box-sizing: border-box;
+    box-shadow: 
+        3px 3px 5px rgba(0, 0, 0, 0.1),
+        0px 4px 10px rgba(213, 213, 213, 0.5),
+        inset 0px 0px 5px rgba(255, 255, 255, 0.6);
+    border-radius: 10px;
+    /* position: relative; */
+}
+
+.form_div h1{
+    font-size: 3.5rem;
+    margin-bottom: 1rem;
+    color: #0d6efd;
+}
+
+.form{
+    margin-top: 0.9rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    gap: 10px;
+}
+
+.form_group{
+    width: 100%;
+    max-width: 400px;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.form_group label{
+    width: 8rem;
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+
+.form_group input{
+    flex-grow: 1;
+    width: 100%;
+    min-width: 0;
+    padding: 0.5rem;
+    font-size: 1rem;
+    box-sizing: border-box;
+    border: none;
+    border-bottom: 1px solid #ccc;
+}
+
+.toggle_psd{
+    position: absolute;
+    right: 10px;
+    font-size: 1rem;
+    top: 11px;
+    cursor: pointer;
+}
+
+.form_group input:focus{
+    outline: none;
+}
+
+.warning_text{
+    color: red;
+    font-size: 10px;
+    display: block;
+}
+
+.form_submit{
+    background-color: #0d6efd;
+    color: white;
+    font-size: 1.1rem;
+    font-weight: 600;
+    padding: 0.4rem 2rem;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    border-radius: 5px;
+    outline: none;
+    border: 1px solid rgb(192, 192, 192);
+    /* width: 15%; */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.form_submit:hover{
+    cursor: pointer;
+    background-color: #0155d3;
+}
+
+@media (max-width: 1200px){
+    .image_div{
+        width: 100%;
+        background-size: cover;
+        height: 60vh;
+    }
+
+    .form_div h1{
+        font-size: 2.8rem;
+    }
+
+    .form_group label{
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 910px){
+    .form_group{
+        padding: 0 0.7rem;
+    }
+}
+
+@media (max-width: 800px){
+    .left_div{
+        width: 70vw;
+    }
+    .container{
+        flex-direction: column;
+        gap: 2rem;
+    }
+
+    .image_div{
+        background-size: contain;
+        width: 100%;
+        height: 90%;
+    }
+
+    .form_div{
+        width: 60vw;
+        justify-content: flex-start;
+        margin-top: -10rem;
+        padding: 0 1rem;
+    }
+
+    .form_group{
+        max-width: 300px;
+    }
+
+    .form_group label{
+        width: 8rem;
+    }
+
+    .form_group input{
+        border: none;
+        border-radius: 0;
+        flex: 1 1 30%;
+        border-bottom: 1px solid #ccc;
+        flex-basis: 50%;
+    }
+
+    .form_group input:focus{
+        outline: none;
+        box-shadow: none;
+        background: none;
+    }
+
+    .form_submit{
+        margin-top: 0.5rem;
+        padding: 0.2rem 3rem;
+        width: 10%;
+    }
+}
+
+@media (max-width: 768px){
+    .left_div{
+        width: 60vw;
+    }
+    .image_div{
+        background-size: contain;
+        width: 100%;
+        height: 100%;
+    }
+
+    .form_div{
+        width: 80vw;
+        height: auto;
+    }
+    .form_group{
+        max-width: 300px;
+    }
+
+    .form_group input{
+        flex-basis: 60%;
+    }
+}

@@ -1,0 +1,258 @@
+/* Container styling */
+.container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 3rem);
+  align-items: center;
+  position: relative;
+  box-sizing: border-box;
+  overflow-x: hidden;
+}
+
+/* Search bar styling */
+.search_div {
+  width: 100%;
+  height: 2.3rem;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  top: 10px;
+}
+
+.search_div > .search_input {
+  width: 50%;
+  height: 100%;
+  outline: none;
+  border: 0.4px solid #3a3a7d;
+  border-radius: 6px;
+  font-size: 1rem;
+  padding: 0 1.2rem;
+}
+
+.search_div > .search_input:focus {
+  border-color: black;
+  box-shadow: 1px 1px 5px 2px #d2d2f8;
+}
+
+.search_div > .search_cancel {
+  position: absolute;
+  right: 25%;
+  color: rgb(51, 49, 49);
+  background: none;
+  cursor: pointer;
+  top: 11px;
+  margin-right: 10px;
+}
+
+/* Table container styling */
+.table_data_div {
+  position: absolute;
+  top: 5.5rem;
+  width: 98%;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.table_btns_div {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  align-items: center;
+  position: relative;
+}
+
+.table_btns {
+  border: 1px solid white;
+  background-color: #0d6efd;
+  color: white;
+  padding: 0.3rem 0.8rem;
+  box-sizing: border-box;
+  border-radius: 5px;
+  min-width: 5rem;
+  text-align: center;
+  font-weight: 600;
+}
+
+.filter_data {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  right: 0;
+}
+
+.filter_data > input {
+  /* padding: 0.2rem 0.8rem !important; */
+}
+
+.filter_data > span {
+  padding: 0.2rem 0.8rem !important;
+}
+
+@media (max-width: 1000px) {
+  .filter_data {
+    position: static;
+  }
+
+  .table_btns_div {
+    flex-direction: column;
+  }
+}
+
+.table_btns_div .table_btns:hover {
+  cursor: pointer;
+  background-color: #0c58ca;
+  transition: background-color 0.3s ease;
+}
+
+/* Table scroll and shadow styling */
+.table_div {
+  max-height: 28.4rem;
+  overflow-y: auto;
+  border-radius: 8px;
+  box-shadow: 2px 2px 2px rgba(35, 35, 59, 0.15);
+  font-size: 13px;
+}
+
+/* Scrollbar styling */
+.table_div::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+.table_div::-webkit-scrollbar-track {
+  background: #fafaff;
+  border-radius: 8px;
+}
+
+.table_div::-webkit-scrollbar-thumb {
+  background-color: #3a3a7d;
+  border-radius: 8px;
+  border: 2px solid #e0e4ff;
+}
+
+.table_div::-webkit-scrollbar-thumb:hover {
+  background-color: #2d2d7a;
+}
+
+/* Table structure */
+.table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+/* Sticky table header */
+.table thead {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+/* Table header styling */
+.table th {
+  text-transform: uppercase;
+  /* background-color: #3a3a7d; */
+  background-color: gainsboro;
+  color: black;
+  font-weight: bold;
+  padding: 0.8rem;
+  border: 1px solid #3a3a7d;
+  box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+  border: none !important;
+  text-align: center;
+}
+
+.table td {
+  height: 2rem;
+  border: 1px solid #dcdfee;
+  text-align: center;
+  padding: 0.6rem;
+  word-break: break-word;
+}
+
+/* Table row colors for readability */
+.table tr:nth-child(even) {
+  background-color: #f4f8ff;
+}
+
+.table tr:nth-child(odd) {
+  background-color: #ffffff;
+}
+
+/* Hover effect for table rows */
+.table tbody tr:hover {
+  background-color: #e0e4ff;
+}
+
+.table select {
+  width: 7rem;
+  height: 2.2rem;
+  cursor: pointer;
+  border-radius: 3px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1200px) {
+  .table_data_div {
+    width: 98%;
+  }
+
+  .table_div {
+    max-height: 20rem;
+    font-size: 13px;
+    word-break: break-all;
+    word-spacing: 4px;
+  }
+
+  .table select {
+    height: 2rem;
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 1000px) {
+  .table_div {
+    max-height: 17rem;
+  }
+
+  .search_div {
+    height: 2rem;
+  }
+
+  .search_div > .search_cancel {
+    top: 8px;
+    margin-right: 7px;
+  }
+}
+
+@media (max-width: 900px) {
+  .table_div {
+    word-break: normal;
+    min-height: 30rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .table_data_div {
+    top: 4rem;
+  }
+  .table_btns_div {
+    flex-direction: column;
+    gap: 5px;
+  }
+  .table_data_info {
+    order: 2;
+  }
+  .table_btns {
+    order: 1;
+  }
+
+  .table select {
+    height: 1.6rem;
+    width: 7rem;
+  }
+}

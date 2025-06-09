@@ -1,0 +1,99 @@
+.modal_overlay{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: 9999;
+}
+
+.modal_content{
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  min-width: 40vw;
+  min-height: 40vh;
+  position: relative;
+}
+
+.modal_header{
+  top: 0;
+  height: 3rem;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-width: 100%;
+}
+
+.modal_header > h2{
+  font-weight: 650;
+  font-size: 1.8rem;
+  word-spacing: 3px;
+}
+
+.modal_header > span{
+  position: absolute;
+  top: 0;
+  right: 5px;
+  font-size: 1.4rem;
+  border: none;
+  background-color: none;
+  color: black;
+  cursor: pointer;
+}
+
+.modal_body{
+  flex-grow: 1;
+  width: 100%;
+  height: calc(100% - 4rem);
+  background-color: white;
+  align-items: center;
+  justify-content: center;
+  overflow: auto;
+  padding: 1rem 2rem;
+}
+
+.modal_body::-webkit-scrollbar{
+  width: 4px;
+  height: 4px;
+}
+
+.modal_body::-webkit-scrollbar-track {
+  background: #fafaff;
+  border-radius: 8px;
+}
+
+.modal_body::-webkit-scrollbar-thumb {
+  background-color: #09090c;
+  border-radius: 8px;
+  border: 2px solid #888383;
+}
+
+.modal_body::-webkit-scrollbar-thumb:hover {
+  background-color: #06060c;
+}
+
+@media (max-width: 800px){
+  .modal_content{
+    min-width: 80vw;
+  }
+}
+
+@media (max-width: 800px){
+  .modal_header > h2{
+    font-size: 1.6rem;
+  }
+}
+
+@media (max-width: 620px){
+  .modal_header > h2{
+    font-size: 1.4rem;
+  }
+}

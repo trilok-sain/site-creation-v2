@@ -1,0 +1,234 @@
+.carousel_overlay{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 9999;
+}
+
+.carousel{
+    background-color: white;
+    color: black;
+    display: flex;
+    flex-direction: column;
+    width: 90vw;
+    height: 90vh;
+}
+
+.carousel_header{
+    height: 2rem;
+    width: 100%;
+    position: relative;
+    /* box-shadow: 4px 0px 10px rgba(0, 0, 0, 0.2); */
+}
+
+.carousel_header > span{
+    position: absolute;
+    right: 0;
+    top: -5px;
+    font-size: 1.8rem;
+    font-weight: 400;
+    color: black;
+    background: none;
+    cursor: pointer;
+}
+
+.carousel_body{
+    width: 100%;
+    height: calc(100% - 2rem);
+    display: grid;
+    grid-template-columns: 2fr 10fr;
+    overflow: hidden;
+}
+
+.carousel_slide{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem 0.5rem;
+    gap: 30px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    /* box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); */
+}
+
+.carousel_slide::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+.carousel_slide::-webkit-scrollbar-track {
+    background-color: #e0e0e0;
+}
+
+.carousel_slide::-webkit-scrollbar-thumb {
+    background-color: #b0b0b0;
+    border-radius: 4px;
+}
+
+.carousel_slide::-webkit-scrollbar-thumb:hover {
+    background-color: #909090;
+}
+
+.carousel_slide::-webkit-scrollbar-corner {
+    background-color: #e0e0e0;
+}
+
+.file_item_div{
+    width: 90%;
+    min-height: 5rem;
+    cursor: pointer;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.file_item_div:hover{
+    background-color: gray;
+    opacity: 0.6;
+}
+
+.file_item_div:focus{
+    border: 1px solid blue;
+}
+
+.file_item_div > img, .file_item_div > video{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.file_item_div > .video_icon{
+    position: absolute;
+    color: white;
+    font-size: 1.5rem;
+}
+
+.file_item_div .slide_file_icon{
+    /* position: absolute; */
+    font-size: 1.5rem;
+    width: 100%;
+    height: 100%;
+    /* top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.file_item_div > input{
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    width: 1rem;
+    height: 1rem;
+    cursor: pointer;
+}
+
+.file_item_div > span{
+    position: absolute;
+    bottom: 6px;
+    right: -5px;
+    width: 1rem;
+    height: 1rem;
+    cursor: pointer;
+    font-size: 1.4rem;
+}
+
+.carousel_main{
+    height: 100%;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 10fr 1fr;
+    place-items: center;
+}
+
+.carousel_main_btn{
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 2rem;
+}
+
+.carousel_main_left, .carousel_main_right{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.carousel_main_div{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+}
+
+.carousel_main_file{
+    width: 100%;
+    height: 95%;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    animation-duration: 0.2s;
+    animation-fill-mode: both;
+}
+
+.carousel_main_file.slide-out {
+    animation-name: slide-out;
+}
+
+.carousel_main_file.slide-in {
+    animation-name: slide-in;
+}
+
+.carousel_main_file img, .carousel_main_file video{
+    position: absolute;
+    width: 100%;
+    height: 95%;
+    object-fit: cover;
+    top: 2rem;
+}
+
+.carousel_main_file a{
+    font-size: 0.8rem;
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 1rem;
+}
+
+@keyframes slide-out{
+    0%{
+        opacity: 1;
+        transform: translateX(0);
+    }
+    100%{
+        opacity: 0;
+        transform: translateX(-100%);
+    }
+}
+
+@keyframes slide-in{
+    0%{
+        opacity: 0;
+        transform: translateX(100%);
+    }
+    100%{
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
