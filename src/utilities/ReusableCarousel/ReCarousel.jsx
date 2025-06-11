@@ -28,7 +28,10 @@ const ReCarousel = ({
   const [transitioning, setTransitioning] = useState(false);
   const [loading, setLoading] = useState(false);
 
-const filterDoc = (file) => isAdditioinal ?  file.filePath.includes("additional") : !file.filePath.includes("additional")
+const filterDoc = (file) => {
+  const isAdditionalInclue =  file.filePath.includes('\A_')
+  return isAdditioinal ? isAdditionalInclue  : !isAdditionalInclue
+} ;
 
   const [combinedFiles, setCombinedFiles] = useState([
     ...(apiFiles || []).filter(filterDoc).map((file) => ({
