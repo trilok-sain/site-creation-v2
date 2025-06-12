@@ -29,7 +29,7 @@ const ReCarousel = ({
   const [loading, setLoading] = useState(false);
 
 const filterDoc = (file) => {
-  const isAdditionalInclue =  file.filePath.includes('\A_')
+  const isAdditionalInclue =  file.filePath.includes('\\A_')
   return isAdditioinal ? isAdditionalInclue  : !isAdditionalInclue
 } ;
 

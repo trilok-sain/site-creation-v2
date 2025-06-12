@@ -3,8 +3,23 @@ import { FaFileImage } from "react-icons/fa";
 // admin and super admin role ids
 export const allowIds = ["1", "2", 1, 2]
 
-const formDataFields = {
+export const status = {
 
+    //  PENDING_FROM_RM : "PENDING_FROM_RM",
+     PENDING_FROM_ADMIN : "PENDING_FROM_ADMIN",
+     PENDING_FROM_LEGAL :"PENDING_FROM_LEGAL",
+     APPROVED :"APPROVED",
+     REJECTED : "REJECTED",
+     PENDING: "PENDING",
+     SHORTLISTED: "SHORTLISTED",
+     PASSED : 'PASSED'
+
+}
+
+export const statuColor = {
+    AMBER: "ffc107",
+    GREEN: "green",
+    RED: "red"
 }
 
 export const stateNames = [
@@ -224,4 +239,13 @@ export const formDataField = {
     noOfShoppingMall: "NO_OF_SHOPPING_MALL",
     noOfMultiplexCinemasInCity: "NO_OF_MUTIPLEX_CINEMAS_IN_CITY",
     presenceOfFoodCourt: "PRESENCE_OF_FOOD_COURT",
+}
+
+export const roleIds = {
+    ADMIN: "1",
+    RM: "2",
+    SUPER_ADMIN: "3",
+    BROKER: "4",
+    LANDLORD: "5",
+    LEGAL: "6"
 }

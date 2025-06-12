@@ -359,7 +359,7 @@ const NewAddSite = ({ customStyle }) => {
     setSuggestions([]);
   };
 
-  let stateOptions = stateNamesList.map((state) => ({
+  let stateOptions = stateNamesList?.map((state) => ({
     label: state?.stateName,
     value: state?.stateName,
   }));

@@ -1251,7 +1251,7 @@ const ViewDetails = () => {
     formData1.append("Remarks", remarksRef.current.value);
     formData1.append("Broker_Name", bNameRef.current.value);
     formData1.append("Broker_M_No", bMobileRef.current.value);
-    formData1.append('Borker_Email',bEmailRef.current.value)
+    formData1.append('Broker_Email',bEmailRef.current.value)
     formData1.append("Landlord_Name", LNameRef.current.value);
     formData1.append("Landlord_M_No", LMobileRef.current.value);
     formData1.append("Landlord_Email", LEmailRef.current.value);

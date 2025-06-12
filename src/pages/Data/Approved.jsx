@@ -16,6 +16,7 @@ import subtractDates from "../../utilities/subtractDates";
 import ReusableModal from "../../utilities/ReusableModal/ReusableModal";
 import NewAddSite from "../NewAddSite";
 import { allowIds } from "../../utilities/constants";
+import { getDisplayStatus, getStatusColor } from "../../utilities/status";
 
 const Approved = () => {
   const baseUrl = useApi();
@@ -29,7 +30,7 @@ const Approved = () => {
   const [loading, setLoading] = useState(false);
   const [optionsDataArr, setOptionsDataArr] = useState([]);
   const [selectedOptionId, setSelectedOptionId] = useState();
-   const emailid = sessionStorage.getItem("emailid");
+  const emailid = sessionStorage.getItem("emailid");
   const roleId = sessionStorage.getItem("roleId");
   const id = sessionStorage.getItem("id");
   const [addNewFormModal, setAddNewFormModal] = useState(false);
@@ -57,7 +58,7 @@ const Approved = () => {
     "ll rate",
     "total area",
     "parking",
-     "broker name",
+    "broker name",
     "created on",
     "aging (days)",
     "action",
@@ -129,16 +130,16 @@ const Approved = () => {
   useEffect(() => {
     const data = tableData.filter((row) => {
       // if (roleId == 1 || roleId == 3 || roleId == 4 || roleId == 5) {
-        return (
-          row.status?.includes("APPROVED") ||
-          row.adminStatus?.includes("APPROVED")
-          // row?.superAdminStatus?.includes("APPROVED")
-        );
+      return (
+        row.status?.includes("APPROVED") ||
+        row.adminStatus?.includes("APPROVED") 
+        // row?.superAdminStatus?.includes("APPROVED")
+      );
       // } else if (roleId == 2) {
       //   return row?.status?.includes("APPROVED");
       // } 
     });
-
+        
     setApprovedData([...data]);
   }, [tableData]);
 
@@ -494,62 +495,62 @@ const Approved = () => {
                     <tr key={index}>
                       <td>{index + 1}</td>
                       {allowIds.includes(roleId) && (
-                      <td>
-                        {row?.status === "PENDING" ? (
-                          <select
-                            onChange={(e) =>
-                              fetchRoutingStatusList(e, row?.siteID)
-                            }
-                          >
-                            <option value="none">Select</option>
-                            {optionsDataArr.map((option, index) => {
-                              return (
-                                <option
-                                  value={option[0]}
-                                  key={index}
-                                  selected={
-                                    parseInt(row?.rM_Name) === option[0]
-                                      ? true
-                                      : false
-                                  }
-                                >
-                                  {option[1]}
-                                </option>
-                              );
-                            })}
-                          </select>
-                        ) : (
-                          <select disabled>
-                            <option value="none">Select</option>
-                            {optionsDataArr.map((option, index) => {
-                              return (
-                                <option
-                                  key={index}
-                                  selected={
-                                    parseInt(row?.rM_Name) === option[0]
-                                      ? true
-                                      : false
-                                  }
-                                >
-                                  {option[1]}
-                                </option>
-                              );
-                            })}
-                          </select>
-                        )}
-                      </td>
-                       )}
-                      
-                        <td>{isNullOrEmpty(row?.state) ? null : row?.state}</td>
                         <td>
-                          {isNullOrEmpty(row?.district_Name)
-                            ? null
-                            : row?.district_Name}
+                          {row?.status === "PENDING" ? (
+                            <select
+                              onChange={(e) =>
+                                fetchRoutingStatusList(e, row?.siteID)
+                              }
+                            >
+                              <option value="none">Select</option>
+                              {optionsDataArr.map((option, index) => {
+                                return (
+                                  <option
+                                    value={option[0]}
+                                    key={index}
+                                    selected={
+                                      parseInt(row?.rM_Name) === option[0]
+                                        ? true
+                                        : false
+                                    }
+                                  >
+                                    {option[1]}
+                                  </option>
+                                );
+                              })}
+                            </select>
+                          ) : (
+                            <select disabled>
+                              <option value="none">Select</option>
+                              {optionsDataArr.map((option, index) => {
+                                return (
+                                  <option
+                                    key={index}
+                                    selected={
+                                      parseInt(row?.rM_Name) === option[0]
+                                        ? true
+                                        : false
+                                    }
+                                  >
+                                    {option[1]}
+                                  </option>
+                                );
+                              })}
+                            </select>
+                          )}
                         </td>
-                        <td>{isNullOrEmpty(row?.city) ? null : row?.city}</td>
+                      )}
+
+                      <td>{isNullOrEmpty(row?.state) ? null : row?.state}</td>
+                      <td>
+                        {isNullOrEmpty(row?.district_Name)
+                          ? null
+                          : row?.district_Name}
+                      </td>
+                      <td>{isNullOrEmpty(row?.city) ? null : row?.city}</td>
 
                       <td>{isNullOrEmpty(row?.rank) ? null : row?.rank}</td>
-                      
+
                       <td>
                         {isNullOrEmpty(row?.lL_Rate) ? null : row?.lL_Rate}
                       </td>
@@ -583,35 +584,22 @@ const Approved = () => {
                       </td>
                       <td>
                         {row?.createdOn === null &&
-                        row?.superAdminActionPerformedOn === null
+                          row?.superAdminActionPerformedOn === null
                           ? ""
                           : row?.superAdminActionPerformedOn === null
-                          ? subtractDates(todayDate, row?.createdOn)
-                          : subtractDates(
+                            ? subtractDates(todayDate, row?.createdOn)
+                            : subtractDates(
                               row?.superAdminActionPerformedOn,
                               row?.createdOn
                             )}
                       </td>
-                      
+
                       <td
                         style={{
-                          color:
-                            row?.status === "APPROVED" ||
-                            row?.adminStatus === "APPROVED" ||
-                            row?.superAdminStatus === "APPROVED"
-                              ? "green"
-                              : row?.status === "REJECTED" ||
-                                row?.adminStatus === "REJECTED" ||
-                                row?.superAdminStatus === "REJECTED"
-                              ? "red"
-                              : row?.status === "PENDING" ||
-                                row?.adminStatus === "PENDING" ||
-                                row?.superAdminStatus === "PENDING"
-                              ? "#ffc107"
-                              : "",
+                          color:getStatusColor(row?.status)
                         }}
                       >
-                        {isNullOrEmpty(row?.status) ? null : row?.status}
+                        {isNullOrEmpty(row?.status) ? null : getDisplayStatus(row?.status)}
                       </td>
                       <td>
                         <FaEye

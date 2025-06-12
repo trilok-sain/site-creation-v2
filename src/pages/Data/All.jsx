@@ -14,6 +14,7 @@ import NewForm from "./NewForm";
 import NewForm2 from "./NewForm2";
 import subtractDates from "../../utilities/subtractDates";
 import { allowIds } from "../../utilities/constants";
+import { getDisplayStatus, getStatusColor } from "../../utilities/status";
 
 const All = () => {
   const baseUrl = useApi();
@@ -214,7 +215,7 @@ const All = () => {
       "SUPERADMIN APPROVED ON",
       "BROKER NAME",
       "BROKER MOBILE NO",
-      'BROKER EMAIL',
+      "BROKER EMAIL",
       "LANDLORD NAME",
       "LANDLORD MOBILE NO",
       "LANDLORD EMAIL"
@@ -341,16 +342,16 @@ const All = () => {
     }
   };
 
-  const getStatus = row => {
-    if (["4", "5"].includes(roleId)) {
+//  const getStatus = row => {
+//     if (["4", "5"].includes(roleId)) {
 
-      return row?.status === "PENDING" ? "PENDING" :
-        row?.adminStatus === "PENDING" && row?.status === "PENDING FROM ADMIN" ? "SHORTLISTED" :
-          row?.status === "REJECTED"   ? "REJECTED" : "APPROVED" ;
-    }
+//       return row?.status === "PENDING" ? "PENDING" :
+//         row?.adminStatus === "PENDING" && row?.status === "PENDING FROM ADMIN" ? "SHORTLISTED" :
+//           row?.status === "REJECTED"   ? "REJECTED" : "APPROVED" ;
+//     }
 
-    return row?.status
-  }
+//     return row?.status
+//   }
 
   return (
     <div className={styles.container}>
@@ -575,23 +576,23 @@ const All = () => {
                       </td>
                       <td
                         style={{
-                          color:
-                            row?.status === "APPROVED" 
-                              // ||row?.superAdminStatus === "APPROVED"
-                              ? "green"
-                              : row?.status === "REJECTED" 
-                                // ||row?.superAdminStatus === "REJECTED"
-                                ? "red"
-                                : row?.status === "PENDING FROM ADMIN" &&
-                                  row?.adminStatus === "PENDING" 
-                                  // ||row?.superAdminStatus === "PENDING"
-                                  ? "blue"
-                                  : "#ffc107",
+                          color: getStatusColor(row),
+                            // row?.status === "APPROVED" 
+                            //   // ||row?.superAdminStatus === "APPROVED"
+                            //   ? "green"
+                            //   : row?.status === "REJECTED" 
+                            //     // ||row?.superAdminStatus === "REJECTED"
+                            //     ? "red"
+                            //     : row?.status === "PENDING FROM ADMIN" &&
+                            //       row?.adminStatus === "PENDING" 
+                            //       // ||row?.superAdminStatus === "PENDING"
+                            //       ? "blue"
+                            //       : "#ffc107",
                           fontSize: "15px",
                         }}
                       >
                         {/* {isNullOrEmpty(row?.status) ? null : row?.status} */}
-                        {getStatus(row)}
+                        {getDisplayStatus(row)}
                       </td>
                       <td>
                         <FaEye

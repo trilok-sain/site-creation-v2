@@ -15,6 +15,7 @@ import subtractDates from "../../utilities/subtractDates";
 import NewAddSite from "../NewAddSite";
 import ReusableModal from "../../utilities/ReusableModal/ReusableModal";
 import { allowIds } from "../../utilities/constants";
+import { getDisplayStatus, getStatusColor } from "../../utilities/status";
 
 const Pending = () => {
   const baseUrl = useApi();
@@ -217,10 +218,10 @@ const Pending = () => {
         "SUPERADMIN APPROVED ON",
         "BROKER NAME",
         "BROKER MOBILE NO",
-        "Broker Email",
+        "BROKER EMAIL",
         "LANDLORD NAME",
         "LANDLORD MOBILE NO",
-        "LandLord Email"
+        "LANDLORD Email"
       ];
 
       const rowData = exportData.map((row, index) => [
@@ -579,24 +580,11 @@ const Pending = () => {
 
                       <td
                         style={{
-                          color:
-                            row?.status === "APPROVED" ||
-                              row?.adminStatus === "APPROVED" ||
-                              row?.superAdminStatus === "APPROVED"
-                              ? "green"
-                              : row?.status === "REJECTED" ||
-                                row?.adminStatus === "REJECTED" ||
-                                row?.superAdminStatus === "REJECTED"
-                                ? "red"
-                                : row?.status === "PENDING" ||
-                                  row?.adminStatus === "PENDING" ||
-                                  row?.superAdminStatus === "PENDING"
-                                  ? "#ffc107"
-                                  : "",
+                          color:getStatusColor(row),
                           fontSize: "15px",
                         }}
                       >
-                        {isNullOrEmpty(row?.status) ? null : row?.status}
+                        {isNullOrEmpty(row?.status) ? null : getDisplayStatus(row?.status)}
                       </td>
                       <td>
                         <FaEye

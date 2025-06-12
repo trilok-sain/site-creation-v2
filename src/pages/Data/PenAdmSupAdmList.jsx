@@ -15,6 +15,7 @@ import subtractDates from "../../utilities/subtractDates";
 import ReusableModal from "../../utilities/ReusableModal/ReusableModal";
 import NewAddSite from "../NewAddSite";
 import { allowIds } from "../../utilities/constants";
+import { getDisplayStatus, getStatusColor } from "../../utilities/status";
 
 const PenAdmSupAdmList = () => {
   const baseUrl = useApi();
@@ -224,7 +225,7 @@ const PenAdmSupAdmList = () => {
         "SUPERADMIN APPROVED ON",
         "BROKER NAME",
         "BROKER MOBILE NO",
-        "Broker Email",
+        "BROKER EMAIL",
         "LANDLORD NAME",
         "LANDLORD MOBILE NO",
         "LANDLORD EMAIL"
@@ -581,24 +582,11 @@ const PenAdmSupAdmList = () => {
 
                       <td
                         style={{
-                          color:
-                            row?.status === "APPROVED" ||
-                            row?.adminStatus === "APPROVED" ||
-                            row?.superAdminStatus === "APPROVED"
-                              ? "green"
-                              : row?.status === "REJECTED" ||
-                                row?.adminStatus === "REJECTED" ||
-                                row?.superAdminStatus === "REJECTED"
-                              ? "red"
-                              : row?.status === "PENDING" ||
-                                row?.adminStatus === "PENDING" ||
-                                row?.superAdminStatus === "PENDING"
-                              ? "#ffc107"
-                              : "",
+                          color:getStatusColor(row),
                           fontSize: "15px",
                         }}
                       >
-                        {isNullOrEmpty(row?.status) ? null : row?.status}
+                        {isNullOrEmpty(row?.status) ? null : getDisplayStatus(row)}
                       </td>
                       <td>
                         <FaEye

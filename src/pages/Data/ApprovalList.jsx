@@ -14,6 +14,7 @@ import NewForm2 from "./NewForm2";
 import subtractDates from "../../utilities/subtractDates";
 import ReusableModal from "../../utilities/ReusableModal/ReusableModal";
 import NewAddSite from "../NewAddSite";
+import { getDisplayStatus, getStatusColor } from "../../utilities/status";
 
 const ApprovalList = () => {
   const baseUrl = useApi();
@@ -570,31 +571,18 @@ const ApprovalList = () => {
                       </td>
                       <td
                         style={{
-                          color:
-                            row?.status === "APPROVED" ||
-                              row?.adminStatus === "APPROVED" ||
-                              row?.superAdminStatus === "APPROVED"
-                              ? "green"
-                              : row?.status === "REJECTED" ||
-                                row?.adminStatus === "REJECTED" ||
-                                row?.superAdminStatus === "REJECTED"
-                                ? "red"
-                                : row?.status === "PENDING" ||
-                                  row?.adminStatus === "PENDING" ||
-                                  row?.superAdminStatus === "PENDING"
-                                  ? "#ffc107"
-                                  : "",
+                          color:getStatusColor(row),
                           fontSize: "15px",
                         }}
                       >
-                        {/* {isNullOrEmpty(row?.status) ? null : row?.status} */}
-                        {roleId == 1
+                        {isNullOrEmpty(row?.status) ? null : getDisplayStatus(row)}
+                        {/* {roleId == 1
                           ? row?.adminStatus
                           : roleId == 2
                             ? row?.status
                             : roleId == 3
                               ? row?.superAdminStatus
-                              : ""}
+                              : ""} */}
                       </td>
                       <td>
                         <FaEye
