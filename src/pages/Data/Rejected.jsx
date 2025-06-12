@@ -15,7 +15,7 @@ import NewForm2 from "./NewForm2";
 import subtractDates from "../../utilities/subtractDates";
 import NewAddSite from "../NewAddSite";
 import ReusableModal from "../../utilities/ReusableModal/ReusableModal";
-import { allowIds } from "../../utilities/constants";
+import { allowIds, status } from "../../utilities/constants";
 import { getDisplayStatus, getStatusColor } from "../../utilities/status";
 
 const Rejected = () => {
@@ -131,8 +131,8 @@ const Rejected = () => {
     
     const data = tableData.filter((row) => {
       return (
-          row.status?.includes("REJECTED") ||
-          row.adminStatus?.includes("REJECTED") 
+          row.status === status.REJECTED 
+          // row.adminStatus?.includes("REJECTED") 
       );
       // if (roleId == 1 || roleId == 4 || roleId == 5) {
         

@@ -13,7 +13,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import NewForm from "./NewForm";
 import NewForm2 from "./NewForm2";
 import subtractDates from "../../utilities/subtractDates";
-import { allowIds } from "../../utilities/constants";
+import { allowIds, roleIds, status } from "../../utilities/constants";
 import { getDisplayStatus, getStatusColor } from "../../utilities/status";
 
 const All = () => {
@@ -79,7 +79,20 @@ const All = () => {
       .then((response) => {
         if (response.status === 200) {
           setLoading(false);
-          setTableData(response?.data?.data);
+          const data = response?.data?.data;
+          if(roleId === roleIds.LEGAL && data?.length > 0) {
+            const legalData =  data
+              .filter(row => 
+                ([
+                  status.PENDING_FROM_LEGAL, 
+                  status.APPROVED, 
+                  status.REJECTED
+                ].includes(row.status)
+              ));
+            setTableData(legalData)
+          }else {
+            setTableData(data);
+          }
           // setExportData(response?.data?.data);
           setSelectedOptionId(
             Array(
@@ -93,6 +106,7 @@ const All = () => {
       .catch((err) => {
         setLoading(false);
         console.log("api err:", err);
+        setTableData([])
       });
   };
 
@@ -479,7 +493,7 @@ const All = () => {
                       <td>{index + 1}</td>
                       {allowIds.includes(roleId)  && (
                         <td>
-                          {row?.status === "PENDING" &&
+                          {row?.status === status.PENDING &&
                             parseInt(roleId) === 1 ? (
                             <select
                               onChange={(e) =>

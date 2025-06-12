@@ -15,7 +15,8 @@ import NewForm2 from "./NewForm2";
 import subtractDates from "../../utilities/subtractDates";
 import ReusableModal from "../../utilities/ReusableModal/ReusableModal";
 import NewAddSite from "../NewAddSite";
-import { allowIds } from "../../utilities/constants";
+import { allowIds, status } from "../../utilities/constants";
+import { handleExportData } from "../../utilities/exportSiteData";
 import { getDisplayStatus, getStatusColor } from "../../utilities/status";
 
 const Approved = () => {
@@ -80,11 +81,18 @@ const Approved = () => {
 
         if (response.status === 200) {
           setLoading(false);
-          setTableData(response?.data?.data);
+          const data = response?.data?.data;
+          const approveData = data
+            .filter(row =>
+            ([
+              status.APPROVED,
+            ].includes(row.status)
+            ));
+          setTableData(approveData);
           setSelectedOptionId(
             Array(
               response?.data?.data.filter((row) => {
-                return row?.status === "PENDING";
+                return row?.status === status.PENDING;
               })
             ).length
           ).fill("none");
@@ -131,15 +139,14 @@ const Approved = () => {
     const data = tableData.filter((row) => {
       // if (roleId == 1 || roleId == 3 || roleId == 4 || roleId == 5) {
       return (
-        row.status?.includes("APPROVED") ||
-        row.adminStatus?.includes("APPROVED") 
+        [row.status, row.adminStatus].includes(status.APPROVED) 
         // row?.superAdminStatus?.includes("APPROVED")
       );
       // } else if (roleId == 2) {
       //   return row?.status?.includes("APPROVED");
       // } 
     });
-        
+
     setApprovedData([...data]);
   }, [tableData]);
 
@@ -177,129 +184,6 @@ const Approved = () => {
     setFilteredData([...data]);
   }, [search, approvedData]);
 
-  // function to export data
-  const handleExportData = () => {
-    exportData;
-    // console.log("expdta", exportData)
-
-    if (exportData.length > 0) {
-      const headers = [
-        "S No", //1
-        "REC DATE", //2
-        "AGING", //3
-        "RM NAME", //4
-        "ZONE",
-        "STATE", //5
-        "DISTRICT NAME", //6
-        "CITY", //7
-        "DISTRICT/CITY POPULATION",
-        "MARKET NAME",
-        "STATUS", //8
-        "CAR PASS PER HRS", //9
-        "BIKE PASS PER HRS", //10
-        "RANK", //17
-        "SITE TYPE", //12
-        "LL RATE", //13
-        "V2 RATE", //14
-        "FRONTAGE", //15
-        "CEILING", //16
-        "TOTAL AREA", //18
-        "BASEMENT PARKING", //19
-        "FRONT PARKING", //20
-        "UGF", //21
-        "LGF", //22
-        "GROUND FLOOR", //23
-        "FIRST FLOOR", //24
-        "SECOND FLOOR", //25
-        "THIRD FLOOR", //26
-        "FOURTH FLOOR", //27
-        "FIFTH FLOOR", //28
-        "GOOGLE COORDINATES", //29
-        "REMARKS", //30
-        "COMPETITOR SALE", //31
-        "ACTION PERFORMED BY", //11
-        "ACTION PERFORMED ON",
-        "ADDRESS",
-        "PROCESS AGING",
-        "UPDATED BY",
-        "UPDATED ON",
-        "ADMIN APPROVED BY",
-        "ADMIN APPROVED ON",
-        "SUPERADMIN APPROVED BY",
-        "SUPERADMIN APPROVED ON",
-        "BROKER NAME",
-        "BROKER MOBILE NO",
-         'BROKER EMAIL',
-        "LANDLORD NAME",
-        "LANDLORD MOBILE NO",
-        "LANDLORD EMAIL"
-      ];
-
-      const rowData = exportData.map((row, index) => [
-        `${index + 1}`,
-        formattedDate(row?.createdOn),
-        subtractDates(todayDate, row?.createdOn),
-        row?.rmByName || "",
-        row.zone || "",
-        row?.state || "",
-        row?.district_Name || "",
-        row?.city || "",
-        row.population || "",
-        row.market || "",
-        row?.status,
-        row?.car_Pass_Per_HRS || "",
-        row?.bike_Pass_Per_HRS || "",
-        row?.rank || "",
-        row?.site_Type || "",
-        row?.lL_Rate || "",
-        row?.v2_Rate || "",
-        row?.frontage || "",
-        row?.propertyCeilingHeight || "",
-        row?.total_area || "",
-        row?.basement_Parking || "",
-        row?.front_Parking || "",
-        row?.ugf || "",
-        row?.lgf || "",
-        row?.ground_floor || "",
-        row?.first_Floor || "",
-        row?.second_Floor || "",
-        row?.third_floor || "",
-        row?.forth_Floor || "",
-        row?.fifth_Floor || "",
-        row?.google_Coordinates || "",
-        row?.remarks || "",
-        row?.competitors_Sale || "",
-        row?.actionperformedby || "",
-        row?.actionperformedon || "",
-        row.address || "",
-        row?.process_ageing || "",
-        row?.updatedBy || "",
-        row?.updatedOn || "",
-        row?.adminActionPerformedBy || "",
-        row?.adminActionPerformedOn || "",
-        row?.superAdminActionPerformedBy || "",
-        row?.superAdminActionPerformedOn || "",
-        row?.broker_Name || "",
-        row?.broker_M_No || "",
-        row?.broker_Email || "",
-        row?.landlord_Name || "",
-        row?.landlord_M_No || "",
-        row?.landlord_Email || "",
-      ]);
-
-      const exportDataFormatted = [headers, ...rowData];
-
-      const worksheet = XLSX.utils.aoa_to_sheet(exportDataFormatted);
-      const workbook = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
-      XLSX.writeFile(
-        workbook,
-        `Export_Approved_Sites_${new Date().toISOString()}.xlsx`
-      );
-    } else {
-      alert("No data to export");
-    }
-  };
 
   // function to go to view details page
   const dataViewHandler = (row, assignedName) => {
@@ -317,17 +201,17 @@ const Approved = () => {
     const approvedData = tableData.filter((row) => {
       if (roleId == 1) {
         return (
-          row.status?.includes("APPROVED") ||
-          row.adminStatus?.includes("APPROVED") ||
-          row?.superAdminStatus?.includes("APPROVED")
+          row.status?.includes(status.APPROVED) ||
+          row.adminStatus?.includes(status.APPROVED) ||
+          row?.superAdminStatus?.includes(status.APPROVED)
         );
       } else if (roleId == 2) {
-        return row?.status?.includes("APPROVED");
+        return row?.status?.includes(status.APPROVED);
       } else if (roleId == 3) {
         return (
-          row.status?.includes("APPROVED") ||
-          row.adminStatus?.includes("APPROVED") ||
-          row?.superAdminStatus?.includes("APPROVED")
+          row.status?.includes(status.APPROVED) ||
+          row.adminStatus?.includes(status.APPROVED) ||
+          row?.superAdminStatus?.includes(status.APPROVED)
         );
       }
     });
@@ -370,6 +254,8 @@ const Approved = () => {
     }
   };
 
+console.log({ filteredData });
+
   return (
     <div className={styles.container}>
       {/* show loader */}
@@ -407,7 +293,7 @@ const Approved = () => {
           >
             <span
               className={styles.table_btns}
-              onClick={handleExportData}
+              onClick={() => handleExportData(exportData)}
               style={{ order: 1 }}
             >
               Export Data
@@ -496,7 +382,7 @@ const Approved = () => {
                       <td>{index + 1}</td>
                       {allowIds.includes(roleId) && (
                         <td>
-                          {row?.status === "PENDING" ? (
+                          {row?.status === status.PENDING ? (
                             <select
                               onChange={(e) =>
                                 fetchRoutingStatusList(e, row?.siteID)
@@ -573,7 +459,7 @@ const Approved = () => {
                           ? null
                           : row?.front_Parking}
                       </td>
-                      
+
                       <td>
                         {isNullOrEmpty(row?.rank) ? null : row?.broker_Name}
                       </td>
@@ -596,10 +482,10 @@ const Approved = () => {
 
                       <td
                         style={{
-                          color:getStatusColor(row?.status)
+                          color: getStatusColor(row)
                         }}
                       >
-                        {isNullOrEmpty(row?.status) ? null : getDisplayStatus(row?.status)}
+                        {isNullOrEmpty(row?.status) ? null : getDisplayStatus(row)}
                       </td>
                       <td>
                         <FaEye

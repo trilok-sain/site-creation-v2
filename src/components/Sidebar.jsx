@@ -7,6 +7,7 @@ import { IoCheckmarkDone } from "react-icons/io5";
 import { MdSmsFailed } from "react-icons/md";
 import { useLocation, useNavigate } from "react-router-dom";
 import { FaRegListAlt } from "react-icons/fa";
+import { roleIds } from "../utilities/constants";
 
 const Sidebar = ({ handleSidebarClose }) => {
   const roleId = sessionStorage.getItem("roleId")
@@ -14,12 +15,20 @@ const Sidebar = ({ handleSidebarClose }) => {
   const location = useLocation()
 
   const tabs = [
-    {label: "All", icon: <CiBoxList/>, url: "/all", roles: ["1", "2", "3", "4", "5"]},
+    {label: "All", icon: <CiBoxList/>, url: "/all", roles: [...Object.values(roleIds)]},
     {label: "Appr/Pend List", icon: <FaRegListAlt/>, url: "/approval-list", roles: []},
-    {label: "Pending", icon: <MdOutlinePending/>, url: "/pending", roles: ["1", "2", "3", "4", "5"]},
-    {label: "Pending Admin", icon: <MdOutlinePending/>, url: "/penAdmSupAdmList", roles: ["1", "2", "3", "4", "5"]},
-    {label: "Rejected", icon: <MdSmsFailed/>, url: "/rejected", roles: ["1", "2", "3", "4", "5"]},
-    {label: "Approved", icon: <IoCheckmarkDone/>, url: "/approve", roles: ["1", "2", "3", "4", "5"]},
+    {label: "Pending", icon: <MdOutlinePending/>, url: "/pending", roles: [
+      roleIds.SUPER_ADMIN, roleIds.ADMIN, roleIds.LEGAL, roleIds.RM
+    ]},
+    {label: "Pen Admin/Legal", icon: <MdOutlinePending/>, url: "/penAdmSupAdmList", roles: [
+      roleIds.SUPER_ADMIN, roleIds.ADMIN, roleIds.RM
+    ]},
+    {label: "Rejected", icon: <MdSmsFailed/>, url: "/rejected", roles: [
+      roleIds.SUPER_ADMIN, roleIds.ADMIN, roleIds.LEGAL, roleIds.RM
+    ]},
+    {label: "Approved", icon: <IoCheckmarkDone/>, url: "/approve", roles: [
+      roleIds.SUPER_ADMIN, roleIds.ADMIN, roleIds.LEGAL, roleIds.RM
+    ]},
   ]
 
   return (

@@ -14,7 +14,7 @@ import NewForm2 from "./NewForm2";
 import subtractDates from "../../utilities/subtractDates";
 import NewAddSite from "../NewAddSite";
 import ReusableModal from "../../utilities/ReusableModal/ReusableModal";
-import { allowIds } from "../../utilities/constants";
+import { allowIds, roleIds, status } from "../../utilities/constants";
 import { getDisplayStatus, getStatusColor } from "../../utilities/status";
 
 const Pending = () => {
@@ -46,8 +46,6 @@ const Pending = () => {
   const handleNewFormModalOpen = () => setAddNewFormModal(true);
   const handleNewFormModalClose = () => setAddNewFormModal(false);
 
-  // console.log("tabledata:", tableData);
-
   const headings = [
     "s no.",
    allowIds.includes(roleId) && "assigned to",
@@ -77,7 +75,6 @@ const Pending = () => {
         )}&userId=${parseInt(id)}&username=${emailid}`
       )
       .then((response) => {
-        // console.log("api data:", response)
 
         if (response.status === 200) {
           setLoading(false);
@@ -85,7 +82,7 @@ const Pending = () => {
           setSelectedOptionId(
             Array(
               response?.data?.data?.filter((row) => {
-                return row?.status === "PENDING";
+                return row?.status === status.PENDING;
               })
             ).length
           )?.fill("none");
@@ -129,7 +126,13 @@ const Pending = () => {
   };
 
   useEffect(() => {
-    const data = tableData.filter((row) => row?.status === "PENDING")
+    const data = tableData.filter((row) => {
+      if(roleId == roleIds.LEGAL) {
+        return row.status === status.PENDING_FROM_LEGAL
+      } else {
+        return row?.status === status.PENDING
+      }
+    })
 
     setPendingData([...data]);
   }, [tableData]);
@@ -292,7 +295,6 @@ const Pending = () => {
 
   // function to go to view details page
   const dataViewHandler = (row, assignedName) => {
-    console.log(row);
     // return
     if (row) {
       navigate(`/view-details/${row?.siteID}`, {
@@ -476,7 +478,7 @@ const Pending = () => {
                       <td>{index + 1}</td>
                       {allowIds.includes(roleId) &&  (
                         <td>
-                          {row?.status === "PENDING" &&
+                          {row?.status === status.PENDING &&
                             parseInt(roleId) === 1 ? (
                             <select
                               onChange={(e) =>
@@ -584,7 +586,7 @@ const Pending = () => {
                           fontSize: "15px",
                         }}
                       >
-                        {isNullOrEmpty(row?.status) ? null : getDisplayStatus(row?.status)}
+                        {isNullOrEmpty(row?.status) ? null : getDisplayStatus(row)}
                       </td>
                       <td>
                         <FaEye

@@ -14,7 +14,7 @@ import NewForm2 from "./NewForm2";
 import subtractDates from "../../utilities/subtractDates";
 import ReusableModal from "../../utilities/ReusableModal/ReusableModal";
 import NewAddSite from "../NewAddSite";
-import { allowIds } from "../../utilities/constants";
+import { allowIds, status } from "../../utilities/constants";
 import { getDisplayStatus, getStatusColor } from "../../utilities/status";
 
 const PenAdmSupAdmList = () => {
@@ -85,7 +85,7 @@ const PenAdmSupAdmList = () => {
           setSelectedOptionId(
             Array(
               response?.data?.data?.filter((row) => {
-                return row?.status === "PENDING";
+                return row?.status === status.PENDING;
               })
             ).length
           )?.fill("none");
@@ -132,7 +132,7 @@ const PenAdmSupAdmList = () => {
     const data = tableData.filter((row) => {
         return (
           // row?.adminStatus?.includes("PENDING") &&
-          row?.status?.includes("PENDING FROM ADMIN")
+          [status.PENDING_FROM_ADMIN, status.PENDING_FROM_LEGAL].includes(row?.status)
         );
     });
 
@@ -479,7 +479,7 @@ const PenAdmSupAdmList = () => {
                       <td>{index + 1}</td>
                       {allowIds.includes(roleId)  && (
                       <td>
-                        {row?.status === "PENDING" &&
+                        {row?.status === status.PENDING &&
                         parseInt(roleId) === 1 ? (
                           <select
                             onChange={(e) =>

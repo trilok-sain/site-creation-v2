@@ -16,6 +16,7 @@ import FilesCarousel from "../../components/FilesCarousel";
 import { ImCross } from "react-icons/im";
 import FilesCarouselPublic from "../../components/FilesCarouselPublic";
 import AdditionalInfo from "./AdditionalInfo";
+import { roleIds, status } from "../../utilities/constants";
 
 const ViewDetails = () => {
   const baseUrl = useApi();
@@ -1434,7 +1435,7 @@ const ViewDetails = () => {
           View Proofs
         </span>
 
-        {rowData?.status === "APPROVED" &&
+        {rowData?.status === status.PENDING_FROM_LEGAL &&
           <span
           className={`${styles.btns} ${styles.btn_secondary}`}
           onClick={() => handleViewProofsCarouselOpen(true)} 
@@ -1453,7 +1454,7 @@ const ViewDetails = () => {
 
         {/* {rowData?.status === "PENDING" && (
         )} */}
-        {((rowData?.status === "APPROVED"  ) && ["4","5"].includes(roleId) ||  
+        {((rowData?.status === status.PENDING_FROM_LEGAL  ) && [roleIds.BROKER, roleIds.LANDLORD].includes(roleId) ||  
           rowData?.status === "PENDING" && roleId == 2||
           (rowData?.adminStatus === "PENDING" && roleId == 1) ||
           (rowData?.superAdminStatus === "PENDING" && roleId == 3)) && (
