@@ -18,7 +18,8 @@ const App = () => {
           <Route path="all" element={<paths.AllData />} />
           <Route path="approval-list" element={<paths.ApprovalList/>} />
           <Route path="pending" element={<paths.Pending />} />
-          <Route path="penAdmSupAdmList" element={<paths.PenAdmSupAdmList />} />
+          <Route path="penAdmList" element={<paths.PenAdmSupAdmList />} />
+          <Route path="pendinglegal" element={<paths.PenAdmSupAdmList />} />
           <Route path="approve" element={<paths.Approve />} />
           <Route path="rejected" element={<paths.Rejected />} />
           <Route path="view-details/:siteId" element={<paths.ViewDetails />} />
