@@ -20,7 +20,7 @@ const Sidebar = ({ handleSidebarClose }) => {
     {label: "Pending", icon: <MdOutlinePending/>, url: "/pending", roles: [
       roleIds.SUPER_ADMIN, roleIds.ADMIN, roleIds.RM
     ]},
-    {label: "Pen Admin", icon: <MdOutlinePending/>, url: "/penAdmList", roles: [
+    {label: "Pending Admin", icon: <MdOutlinePending/>, url: "/penAdmList", roles: [
       roleIds.SUPER_ADMIN, roleIds.ADMIN, roleIds.RM
     ]},
     {label: "Pending Legal", icon: <MdOutlinePending/>, url: "/pendinglegal", roles: [
