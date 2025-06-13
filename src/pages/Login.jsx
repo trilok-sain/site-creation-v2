@@ -6,6 +6,8 @@ import { useNavigate } from "react-router-dom";
 import Loader from "../utilities/Loader";
 import { useApi } from "../APIConfig/APIContext";
 import axios from "axios";
+import { setEmailId, setFirstName, setId, setLogin, setRoleId, setRoleName } from "../utilities/sessionUtils";
+import { roleIds } from "../utilities/constants";
 
 const Login = () => {
   const baseUrl = useApi()
@@ -59,18 +61,18 @@ const Login = () => {
             const data = response?.data?.data
             // console.log("loginres", response)
 
-            sessionStorage.setItem("login", 1)
-            sessionStorage.setItem("id", data?.id)
-            sessionStorage.setItem("roleId", data?.role_ID)
-            sessionStorage.setItem("roleName", data?.role_Name)
-            sessionStorage.setItem("firstName", data?.firstname)
-            sessionStorage.setItem("emailid", data?.emailid);
-            
-            if(data?.role_ID == 6 || true ) {
+            setLogin(1)
+            setId(data?.id)
+            setRoleId(data?.role_ID)
+            setRoleName(data?.role_Name)
+            setFirstName(data?.firstname)
+            setEmailId(data?.emailid);
+
+            if (data?.role_ID == 6 || true) {
               navigate("/approve")
             }
 
-            if (["4", "5", 4, 5].includes(data?.role_ID)) {
+            if ([roleIds.BROKER, roleIds.LANDLORD].includes(String(data?.role_ID))) {
               navigate("/all")
             }
 

@@ -30,7 +30,8 @@ export const statuColor = {
     GREEN: "green",
     RED: "red",
     ORANGE: "orange",
-    BLUE: "blue"
+    BLUE: "blue",
+    YELLOW: "yellow"
 }
 
 export const stateNames = [
@@ -250,6 +251,12 @@ export const formDataField = {
     noOfShoppingMall: "NO_OF_SHOPPING_MALL",
     noOfMultiplexCinemasInCity: "NO_OF_MUTIPLEX_CINEMAS_IN_CITY",
     presenceOfFoodCourt: "PRESENCE_OF_FOOD_COURT",
+}
+
+export const docUploadTypes = {
+    SITE_PROOF: "SITE_PROOF",
+    ADD_DOC: "ADD_DOC",
+    LEG_DOC: "LEG_DOC" 
 }
 
 

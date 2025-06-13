@@ -13,13 +13,14 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Loader from "../Loader";
+import { docUploadTypes } from "../constants";
 
 const ReCarousel = ({
   handleCloseCarousel,
   apiFiles = [],
   localFiles = [],
   siteID,
-  isAdditioinal
+  docUploadType
 }) => {
   const baseUrl = useApi();
   const navigate = useNavigate();
@@ -29,8 +30,12 @@ const ReCarousel = ({
   const [loading, setLoading] = useState(false);
 
 const filterDoc = (file) => {
-  const isAdditionalInclue =  file.filePath.includes('\\A_')
-  return isAdditioinal ? isAdditionalInclue  : !isAdditionalInclue
+  return docUploadType == docUploadTypes.SITE_PROOF 
+    ? file.filePath.includes('\\I_')  
+    : docUploadType == docUploadTypes.ADD_DOC 
+      ? file.filePath.includes('\\A_')
+      : file.filePath.includes('\\L_')
+
 } ;
 
   const [combinedFiles, setCombinedFiles] = useState([

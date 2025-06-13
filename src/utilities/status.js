@@ -30,7 +30,8 @@ export const getStatusColor = row => {
             ? statuColor.RED
             : status?.PENDING_FROM_ADMIN === row?.status 
                 ? statuColor.ORANGE
-                :[status?.PENDING, status.PENDING_FROM_LEGAL].includes(row?.status)  
+                :status.PENDING_FROM_LEGAL == row?.status
                 ? statuColor.BLUE
-                : "";
+                : statuColor.YELLOW;
 }
+

@@ -54,7 +54,7 @@ const PenAdmSupAdmList = () => {
     "state",
     "district",
     "city",
-     "rank",
+    "rank",
     "frontage",
     "ll rate",
     "total area",
@@ -130,14 +130,19 @@ const PenAdmSupAdmList = () => {
 
   useEffect(() => {
     const data = tableData.filter((row) => {
+      if (location.pathname == "/pendinglegal") {
         return (
-          // row?.adminStatus?.includes("PENDING") &&
-          [status.PENDING_FROM_ADMIN, status.PENDING_FROM_LEGAL].includes(row?.status)
+          [status.PENDING_FROM_LEGAL].includes(row?.status)
         );
+      } else {
+        return (
+          [status.PENDING_FROM_ADMIN].includes(row?.status)
+        );
+      }
     });
 
     setPenAdmSupAdmList([...data]);
-  }, [tableData]);
+  }, [tableData, location.pathname]);
 
 
   // filter pending data from tableData
@@ -312,7 +317,7 @@ const PenAdmSupAdmList = () => {
   useEffect(() => {
     fetchSelectOptions();
     fetchData();
-  }, []);
+  }, [location.pathname]);
 
   useEffect(() => {
     setExportData(penAdmSupAdmList);
@@ -477,87 +482,87 @@ const PenAdmSupAdmList = () => {
                   return (
                     <tr key={index}>
                       <td>{index + 1}</td>
-                      {allowIds.includes(roleId)  && (
+                      {allowIds.includes(roleId) && (
+                        <td>
+                          {row?.status === status.PENDING &&
+                            parseInt(roleId) === 1 ? (
+                            <select
+                              onChange={(e) =>
+                                fetchRoutingStatusList(e, row?.siteID)
+                              }
+                            >
+                              <option value="none">Select</option>
+                              {optionsDataArr.map((option, index) => {
+                                return (
+                                  <option
+                                    value={option[0]}
+                                    key={index}
+                                    selected={
+                                      parseInt(row?.rM_Name) === option[0]
+                                        ? true
+                                        : false
+                                    }
+                                  >
+                                    {option[1]}
+                                  </option>
+                                );
+                              })}
+                            </select>
+                          ) : (
+                            <select disabled>
+                              <option value="none">Select</option>
+                              {optionsDataArr.map((option, index) => {
+                                return (
+                                  <option
+                                    key={index}
+                                    selected={
+                                      parseInt(row?.rM_Name) === option[0]
+                                        ? true
+                                        : false
+                                    }
+                                  >
+                                    {option[1]}
+                                  </option>
+                                );
+                              })}
+                            </select>
+                          )}
+                        </td>
+                      )}
+                      <td>{isNullOrEmpty(row?.state) ? null : row?.state}</td>
                       <td>
-                        {row?.status === status.PENDING &&
-                        parseInt(roleId) === 1 ? (
-                          <select
-                            onChange={(e) =>
-                              fetchRoutingStatusList(e, row?.siteID)
-                            }
-                          >
-                            <option value="none">Select</option>
-                            {optionsDataArr.map((option, index) => {
-                              return (
-                                <option
-                                  value={option[0]}
-                                  key={index}
-                                  selected={
-                                    parseInt(row?.rM_Name) === option[0]
-                                      ? true
-                                      : false
-                                  }
-                                >
-                                  {option[1]}
-                                </option>
-                              );
-                            })}
-                          </select>
-                        ) : (
-                          <select disabled>
-                            <option value="none">Select</option>
-                            {optionsDataArr.map((option, index) => {
-                              return (
-                                <option
-                                  key={index}
-                                  selected={
-                                    parseInt(row?.rM_Name) === option[0]
-                                      ? true
-                                      : false
-                                  }
-                                >
-                                  {option[1]}
-                                </option>
-                              );
-                            })}
-                          </select>
-                        )}
+                        {isNullOrEmpty(row?.district_Name)
+                          ? null
+                          : row?.district_Name}
                       </td>
-                       )}
-                                            <td>{isNullOrEmpty(row?.state) ? null : row?.state}</td>
-                                            <td>
-                                              {isNullOrEmpty(row?.district_Name)
-                                                ? null
-                                                : row?.district_Name}
-                                            </td>
-                                            <td>{isNullOrEmpty(row?.city) ? null : row?.city}</td>
+                      <td>{isNullOrEmpty(row?.city) ? null : row?.city}</td>
 
                       <td>{isNullOrEmpty(row?.rank) ? null : row?.rank}</td>
-                      
-                                            <td>
-                                              {isNullOrEmpty(row?.frontage) ? null : row?.frontage}
-                                            </td>
-                      
-                                            <td>
-                                              {isNullOrEmpty(row?.lL_Rate) ? null : row?.lL_Rate}
-                                            </td>
-                                            <td>
-                                              {isNullOrEmpty(row?.total_area)
-                                                ? null
-                                                : row?.total_area}
-                                            </td>
-                      
-                                            <td>
-                                              {isNullOrEmpty(row?.basement_Parking)
-                                                ? null
-                                                : row?.basement_Parking}
-                                            </td>
-                                            <td>
-                                              {isNullOrEmpty(row?.front_Parking)
-                                                ? null
-                                                : row?.front_Parking}
-                                            </td>
-                      
+
+                      <td>
+                        {isNullOrEmpty(row?.frontage) ? null : row?.frontage}
+                      </td>
+
+                      <td>
+                        {isNullOrEmpty(row?.lL_Rate) ? null : row?.lL_Rate}
+                      </td>
+                      <td>
+                        {isNullOrEmpty(row?.total_area)
+                          ? null
+                          : row?.total_area}
+                      </td>
+
+                      <td>
+                        {isNullOrEmpty(row?.basement_Parking)
+                          ? null
+                          : row?.basement_Parking}
+                      </td>
+                      <td>
+                        {isNullOrEmpty(row?.front_Parking)
+                          ? null
+                          : row?.front_Parking}
+                      </td>
+
                       <td>
                         {isNullOrEmpty(row?.broker_Name)
                           ? null
@@ -570,11 +575,11 @@ const PenAdmSupAdmList = () => {
                       </td>
                       <td>
                         {row?.createdOn === null &&
-                        row?.superAdminActionPerformedOn === null
+                          row?.superAdminActionPerformedOn === null
                           ? ""
                           : row?.superAdminActionPerformedOn === null
-                          ? subtractDates(todayDate, row?.createdOn)
-                          : subtractDates(
+                            ? subtractDates(todayDate, row?.createdOn)
+                            : subtractDates(
                               row?.superAdminActionPerformedOn,
                               row?.createdOn
                             )}
@@ -582,7 +587,7 @@ const PenAdmSupAdmList = () => {
 
                       <td
                         style={{
-                          color:getStatusColor(row),
+                          color: getStatusColor(row),
                           fontSize: "15px",
                         }}
                       >

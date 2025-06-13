@@ -16,7 +16,8 @@ import FilesCarousel from "../../components/FilesCarousel";
 import { ImCross } from "react-icons/im";
 import FilesCarouselPublic from "../../components/FilesCarouselPublic";
 import AdditionalInfo from "./AdditionalInfo";
-import { roleIds, status } from "../../utilities/constants";
+import styles2 from "./../Data/ViewDetails.module.css";
+import { docUploadTypes, roleIds, status } from "../../utilities/constants";
 
 const ViewDetails = () => {
   const baseUrl = useApi();
@@ -29,6 +30,7 @@ const ViewDetails = () => {
   const rowData = location?.state?.rowData;
   const [rank, setRank] = useState("");
   const [showApiError, setShowApiError] = useState(false);
+  const [legalApproveModal, setLegalApproveModal] = useState(false)
   const emailid = sessionStorage.getItem("emailid");
   const [apiError, setApiError] = useState("");
   const [isFieldsEditable, setIsFeildseditable] = useState(false);
@@ -111,6 +113,7 @@ const ViewDetails = () => {
   const [siteProofs, setSiteProofs] = useState([]);
   const [suggestions, setSuggestions] = useState([]);
   const [stateNamesList, setStateNamesList] = useState([]);
+  const [toggleAccordionLegal, setToggleAccordionLegal] = useState(false)
   const [proofFiles, setProofFiles] = useState({
     buildingFrontFile: [],
     buildingOppositeFile: [],
@@ -309,6 +312,8 @@ const ViewDetails = () => {
     setIsSampleModalOpen(true);
   };
 
+  const isLoggedInLegalUser = roleId == roleIds.LEGAL;
+
   const toggleAccordion = (id) => {
     setIsAccordionOpen((prev) => ({
       ...prev,
@@ -322,6 +327,15 @@ const ViewDetails = () => {
     setProofFiles((prev) => ({
       ...prev,
       [type]: [...data],
+    }));
+  };
+
+  const deleteFileAccordionLegal = (e, idx) => {
+    const data = legalApproveData?.legalApproveFile?.filter((file, i) => i !== idx);
+
+    setLegalApproveData((prev) => ({
+      ...prev,
+      legalApproveFile: [...data],
     }));
   };
 
@@ -545,9 +559,16 @@ const ViewDetails = () => {
   const [viewRemarksModal, setViewRemarksModal] = useState(false);
   const [tcModal, setTCModal] = useState(false);
   const [viewProofsCarousel, setViewProofsCarousel] = useState(false);
-  const [isAdditioinal, setAdditional] = useState(false)//change
+  const [isAdditioinal, setAdditional] = useState(false)
+  const [docUploadType, setDocUploadtype] = useState(docUploadTypes.SITE_PROOF)//change
 
   const [addProofs, setAddProofs] = useState([]);
+
+  const [legalApproveData, setLegalApproveData] = useState({
+    remark: "",
+    legalApproveFile: []
+  })
+
   const [approveFormData, setApproveFormData] = useState({
     zone: parseInt(roleId) === 1 || parseInt(roleId) === 3 ? rowData?.zone : "",
     v2rate:
@@ -568,29 +589,29 @@ const ViewDetails = () => {
     formData.llRate < 35
       ? (rankSum += 10)
       : formData.llRate > 35 && formData.llRate < 50
-      ? (rankSum += 7)
-      : formData.llRate > 50 && formData.llRate < 70
-      ? (rankSum += 6.5)
-      : (rankSum += 5);
+        ? (rankSum += 7)
+        : formData.llRate > 50 && formData.llRate < 70
+          ? (rankSum += 6.5)
+          : (rankSum += 5);
 
     // ***** FRONTAGE *****
     formData.frontage > 100
       ? (rankSum += 8)
       : formData.frontage > 60 && formData.frontage < 100
-      ? (rankSum += 6)
-      : formData.frontage > 45 && formData.frontage < 60
-      ? (rankSum += 4.5)
-      : formData.frontage > 30 && formData.frontage < 45
-      ? (rankSum += 2.5)
-      : 0;
+        ? (rankSum += 6)
+        : formData.frontage > 45 && formData.frontage < 60
+          ? (rankSum += 4.5)
+          : formData.frontage > 30 && formData.frontage < 45
+            ? (rankSum += 2.5)
+            : 0;
 
     // ***** BASEMENT AND FRONT PARKING *****
     formData.basementParking > 0 && formData.frontParking > 0
       ? (rankSum += 7)
       : (formData.basementParking === 0 && formData.frontParking > 0) ||
         (formData.basementParking > 0 && formData.frontParking === 0)
-      ? (rankSum += 5)
-      : (rankSum += 3.5);
+        ? (rankSum += 5)
+        : (rankSum += 3.5);
 
     // ***** PROPERTY CEILING HEIGHT*****
     if (formData.propertyCeilHeight < 8) {
@@ -605,19 +626,19 @@ const ViewDetails = () => {
     formData.roadWidth > 80
       ? (rankSum += 8)
       : formData.roadWidth > 50 && formData.roadWidth < 80
-      ? (rankSum = +6.5)
-      : formData.roadWidth > 30 && formData.roadWidth < 50
-      ? (rankSum += 5)
-      : (rankSum += 4);
+        ? (rankSum = +6.5)
+        : formData.roadWidth > 30 && formData.roadWidth < 50
+          ? (rankSum += 5)
+          : (rankSum += 4);
 
     // ***** GROUND FLOOR *****
     formData.groundFloor > 6000
       ? (rankSum += 8)
       : formData.groundFloor < 4000 && formData.groundFloor > 6000
-      ? (rankSum += 7)
-      : formData.groundFloor > 3000 && formData.groundFloor < 4000
-      ? (rankSum += 5)
-      : (rankSum += 3);
+        ? (rankSum += 7)
+        : formData.groundFloor > 3000 && formData.groundFloor < 4000
+          ? (rankSum += 5)
+          : (rankSum += 3);
 
     // ***** POPULATION *****
     formData.population > 0 ? (rankSum += 5) : (rankSum += 0);
@@ -626,10 +647,10 @@ const ViewDetails = () => {
     formData.noCompetitors > 4
       ? (rankSum += 7)
       : formData.noCompetitors > 2 && formData.noCompetitors < 4
-      ? (rankSum += 5)
-      : formData.noCompetitors === 1
-      ? (rankSum += 4)
-      : (rankSum += 3);
+        ? (rankSum += 5)
+        : formData.noCompetitors === 1
+          ? (rankSum += 4)
+          : (rankSum += 3);
 
     // ***** LOCATION PREFERENCE *****
     if (
@@ -645,44 +666,44 @@ const ViewDetails = () => {
     formData.lockinPeriod === "no-lockin"
       ? (rankSum += 6)
       : formData.lockinPeriod === "1"
-      ? (rankSum += 5)
-      : formData.lockinPeriod
-      ? (rankSum += 4.5)
-      : (rankSum += 0);
+        ? (rankSum += 5)
+        : formData.lockinPeriod
+          ? (rankSum += 4.5)
+          : (rankSum += 0);
 
     // ***** DEPOSIT *****
     formData.appDeposit === 2
       ? (rankSum += 6)
       : formData.appDeposit > 2
-      ? (rankSum += 4)
-      : formData.appDeposit > 6
-      ? (rankSum += 2)
-      : (rankSum += 0);
+        ? (rankSum += 4)
+        : formData.appDeposit > 6
+          ? (rankSum += 2)
+          : (rankSum += 0);
 
     // ***** CAPEX FROM LANDLORD *****
     formData.capexLandlord > 300
       ? (rankSum += 6)
       : formData.capexLandlord > 200 && formData.capexLandlord < 300
-      ? (rankSum += 4.5)
-      : formData.capexLandlord > 100 && formData.capexLandlord < 200
-      ? (rankSum += 3.5)
-      : (rankSum += 2);
+        ? (rankSum += 4.5)
+        : formData.capexLandlord > 100 && formData.capexLandlord < 200
+          ? (rankSum += 3.5)
+          : (rankSum += 2);
 
     // ***** SITE TYPE *****
     formData.siteType === "RTM"
       ? (rankSum += 6)
       : formData.siteType === "S-BTS"
-      ? (rankSum += 5)
-      : formData.siteType === "BTS"
-      ? (rankSum += 4)
-      : (rankSum += 0);
+        ? (rankSum += 5)
+        : formData.siteType === "BTS"
+          ? (rankSum += 4)
+          : (rankSum += 0);
 
     // ***** POWER SUPPLY *****
     formData.powerSupply === "yes"
       ? (rankSum += 5)
       : formData.powerSupply === "no"
-      ? (rankSum += 2.5)
-      : (rankSum += 0);
+        ? (rankSum += 2.5)
+        : (rankSum += 0);
 
     // ***** ROAD TRAFFIC *****
     formData.roadTraffic > 0 ? (rankSum += 5) : (rankSum += 0);
@@ -691,51 +712,77 @@ const ViewDetails = () => {
     roadRanking === "main-road"
       ? (rankSum += 7)
       : roadRanking === "main-road2"
-      ? (rankSum += 5)
-      : roadRanking === "main-road3"
-      ? (rankSum += 4)
-      : roadRanking === "connecting-road"
-      ? (rankSum += 2)
-      : (rankSum += 0);
+        ? (rankSum += 5)
+        : roadRanking === "main-road3"
+          ? (rankSum += 4)
+          : roadRanking === "connecting-road"
+            ? (rankSum += 2)
+            : (rankSum += 0);
 
     // ***** MARKET RANKING *****
     marketRanking === "main-market"
       ? (rankSum += 7)
       : marketRanking === "near-market"
-      ? (rankSum += 5)
-      : marketRanking === "out-ranking"
-      ? (rankSum += 3)
-      : (rankSum += 0);
+        ? (rankSum += 5)
+        : marketRanking === "out-ranking"
+          ? (rankSum += 3)
+          : (rankSum += 0);
 
     // ***** SOURCE OF INCOME *****
     incomeSource === "option1"
       ? (rankSum += 7)
       : incomeSource === "option2"
-      ? (rankSum += 5)
-      : incomeSource === "option3"
-      ? (rankSum += 4)
-      : (rankSum += 0);
+        ? (rankSum += 5)
+        : incomeSource === "option3"
+          ? (rankSum += 4)
+          : (rankSum += 0);
 
     // ***** CALCULATE SITE RANK *****
     rankSum > 70
       ? setRank("A")
       : rankSum > 20 && rankSum < 70
-      ? setRank("B")
-      : setRank("C");
+        ? setRank("B")
+        : setRank("C");
   };
 
   // ***** MODALS AND CAROUSELS UPDATE FUNCTIONS *****
-  const handleApproveModalOpen = () => setApproveModal(true);
-  const handleApproveModalClose = () => {
-    setApproveModal(false);
-    setApproveFormData({
-      rank: "",
-      zone: "",
-      v2rate: "",
-      approveRemarks: "",
-    });
+  const handleApproveModalOpen = () => {
+    isLoggedInLegalUser ?
+      setLegalApproveModal(true)
+      :
+      setApproveModal(true)
   };
-  const handleRejectModalOpen = () => setRejectModal(true);
+
+  const handleApproveModalClose = () => {
+    if (isLoggedInLegalUser) {
+      setLegalApproveModal(false);
+      setLegalApproveData({
+        remark: "",
+        legalApproveFile: [],
+      });
+    } else {
+      setApproveModal(false);
+      setApproveFormData({
+        rank: "",
+        zone: "",
+        v2rate: "",
+        approveRemarks: "",
+      });
+    }
+  };
+  const handleRejectModalOpen = () => {
+    if (isLoggedInLegalUser) {
+      setLegalApproveModal(true);
+      setLegalApproveData({
+        remark: "",
+        legalApproveFile: [],
+        reject: true
+      });
+    } else {
+
+      setRejectModal(true);
+    }
+  }
   const handleRejectModalClose = () => {
     setRejectModal(false);
     setRejectRemarks("");
@@ -749,12 +796,12 @@ const ViewDetails = () => {
   const handleTCModalClose = () => setTCModal(false);
   const handleViewRemarksModalOpen = () => setViewRemarksModal(true);
   const handleViewRemarksModalClose = () => setViewRemarksModal(false);
- const handleViewProofsCarouselOpen = (value = false) =>{ 
+  const handleViewProofsCarouselOpen = (value = docUploadTypes.SITE_PROOF) => {
     setViewProofsCarousel(true)
-    setAdditional(value)
+    setDocUploadtype(value)
   };
   const handleViewProofsCarouselClose = () => {
-     setAdditional(false)
+    setDocUploadtype(docUploadTypes.SITE_PROOF)
     setViewProofsCarousel(false)
   };
 
@@ -792,12 +839,71 @@ const ViewDetails = () => {
   };
 
   // ***** FUNCTION TO CHANGE INPUTS VALUES FOR APPROVE FORM *****
+  const handleLegalApproveFormChange = (e) => {
+    setLegalApproveData((prev) => ({
+      ...prev,
+      [e.target.id]: e.target.value,
+    }));
+  };
+
+  const handleLegalApproveFileChange = (e) => {
+    setLegalApproveData((prev) => ({
+      ...prev,
+      [e.target.id]: Array.from(e.target.files),
+    }));
+  }
+
+  // ***** FUNCTION TO CHANGE INPUTS VALUES FOR APPROVE FORM *****
   const handleApproveFormChange = (e) => {
     setApproveFormData((prev) => ({
       ...prev,
       [e.target.id]: e.target.value,
     }));
   };
+
+  const handleLegalDocuementSubmit = async (type) => {
+
+    if (legalApproveData.remark?.trim().length <= 0 && !type) {
+      toast.error("Remark is mandetory");
+      return false;
+    }
+
+    if (legalApproveData.legalApproveFile?.length == 0 && !legalApproveData.reject) {
+      toast.error("Legal Document is mandetory");
+      return false;
+    }
+
+    const formData = new FormData();
+
+    formData.append("SiteId", String(rowData?.siteID));
+    formData.append("RoleId", roleId);
+    formData.append("UserId", id);
+    formData.append("Remarks", legalApproveData.remark);
+    formData.append("Type", type);
+    formData.append("actionPerformby", id);
+    legalApproveData?.legalApproveFile?.forEach(file => formData.append("LegalDocument", file))
+
+    // RoleId
+    // UserId
+    // Remarks - mandotory for reject
+    // Type // true/false
+    // actionPerformby
+    // LegalDocument - document mendorty for approve
+
+    await axios
+      .post(`${baseUrl}/api/Site/UpdateSiteStatusLegal`, formData)
+      .then((response) => {
+        if (response.status === 200) {
+          toast.success(response?.data?.message || "Approved successfully!!");
+          navigate(previousLocation);
+        }
+      })
+      .catch((err) => {
+        toast.error(
+          err?.response?.data?.message || "Failed to approve site!"
+        );
+      });
+  }
 
   // ***** FUNCTION TO TOGGLE EDIT FOR FORM FIELDS *****
   const toggleFieldsEdit = () => setIsFeildseditable(!isFieldsEditable);
@@ -1252,7 +1358,7 @@ const ViewDetails = () => {
     formData1.append("Remarks", remarksRef.current.value);
     formData1.append("Broker_Name", bNameRef.current.value);
     formData1.append("Broker_M_No", bMobileRef.current.value);
-    formData1.append('Broker_Email',bEmailRef.current.value)
+    formData1.append('Broker_Email', bEmailRef.current.value)
     formData1.append("Landlord_Name", LNameRef.current.value);
     formData1.append("Landlord_M_No", LMobileRef.current.value);
     formData1.append("Landlord_Email", LEmailRef.current.value);
@@ -1406,27 +1512,29 @@ const ViewDetails = () => {
 
       {/* ***** BUTTONS DIV ***** */}
       <div className={styles.btns_div}>
-        {(rowData?.status === "PENDING" && roleId == 2|| 
+        {(rowData?.status === "PENDING" && roleId == 2 ||
           (rowData?.adminStatus === "PENDING" && roleId == 1) ||
-          (rowData?.superAdminStatus === "PENDING" && roleId == 3)) && (
-          <span
-            className={`${styles.btns} ${styles.btn_primary}`}
-            onClick={handleApproveModalOpen}
-          >
-            Approve
-          </span>
-        )}
+          (rowData?.superAdminStatus === "PENDING" && roleId == 3) ||
+          (rowData?.legalStatus === "PENDING" && roleId == 6)) && (
+            <span
+              className={`${styles.btns} ${styles.btn_primary}`}
+              onClick={handleApproveModalOpen}
+            >
+              Approve
+            </span>
+          )}
 
-        {(rowData?.status === "PENDING" && roleId == 2||
+        {(rowData?.status === "PENDING" && roleId == 2 ||
           (rowData?.adminStatus === "PENDING" && roleId == 1) ||
-          (rowData?.superAdminStatus === "PENDING" && roleId == 3)) && (
-          <span
-            className={`${styles.btns} ${styles.btn_danger}`}
-            onClick={handleRejectModalOpen}
-          >
-            Reject
-          </span>
-        )}
+          (rowData?.superAdminStatus === "PENDING" && roleId == 3) ||
+          (rowData?.legalStatus === "PENDING" && roleId == 6)) && (
+            <span
+              className={`${styles.btns} ${styles.btn_danger}`}
+              onClick={handleRejectModalOpen}
+            >
+              Reject
+            </span>
+          )}
 
         <span
           className={`${styles.btns} ${styles.btn_secondary}`}
@@ -1435,15 +1543,25 @@ const ViewDetails = () => {
           View Proofs
         </span>
 
-        {rowData?.status === status.PENDING_FROM_LEGAL &&
+        {rowData?.status === status.PENDING_FROM_LEGAL ||
+          rowData?.status === status.APPROVED &&
           <span
-          className={`${styles.btns} ${styles.btn_secondary}`}
-          onClick={() => handleViewProofsCarouselOpen(true)} 
-        >
-          View Documents
-        </span>}
+            className={`${styles.btns} ${styles.btn_secondary}`}
+            onClick={() => handleViewProofsCarouselOpen(docUploadTypes.ADD_DOC)}
+          >
+            View Documents
+          </span>}
 
-        {rowData?.status !== "PENDING" && (
+        {rowData?.status === status.PENDING_FROM_LEGAL ||
+          rowData?.status === status.APPROVED &&
+          <span
+            className={`${styles.btns} ${styles.btn_secondary}`}
+            onClick={() => handleViewProofsCarouselOpen(docUploadTypes.LEG_DOC)}
+          >
+            View Legal Doc
+          </span>}
+
+        {rowData?.status !== status.PENDING && (
           <span
             className={`${styles.btns} ${styles.btn_secondary}`}
             onClick={handleViewRemarksModalOpen}
@@ -1454,19 +1572,19 @@ const ViewDetails = () => {
 
         {/* {rowData?.status === "PENDING" && (
         )} */}
-        {((rowData?.status === status.PENDING_FROM_LEGAL  ) && [roleIds.BROKER, roleIds.LANDLORD].includes(roleId) ||  
-          rowData?.status === "PENDING" && roleId == 2||
+        {((rowData?.status === status.PENDING_FROM_LEGAL) && [roleIds.BROKER, roleIds.LANDLORD].includes(roleId) ||
+          rowData?.status === "PENDING" && roleId == 2 ||
           (rowData?.adminStatus === "PENDING" && roleId == 1) ||
           (rowData?.superAdminStatus === "PENDING" && roleId == 3)) && (
-          <span
-            className={`${styles.btns} ${styles.btn_primary}`}
-            onClick={handleAddProofsModalOpen}
-          >
-            {(rowData?.status === "APPROVED" ||  rowData?.adminStatus === "APPROVED") && ["4","5"].includes(roleId) ? "Add Documents" : "Add Proofs"}
-          </span>
-        )}
+            <span
+              className={`${styles.btns} ${styles.btn_primary}`}
+              onClick={handleAddProofsModalOpen}
+            >
+              {(rowData?.status === status.PENDING_FROM_LEGAL) && ["4", "5"].includes(roleId) ? "Add Documents" : "Add Proofs"}
+            </span>
+          )}
 
-        {( (rowData?.status === "PENDING" &&  ["4","5"].includes(roleId)) || //EDIT FORM WHEN STATUS PENDING
+        {((rowData?.status === "PENDING" && ["4", "5"].includes(roleId)) || //EDIT FORM WHEN STATUS PENDING
           (rowData?.status === "PENDING" && roleId == 2) ||
           (rowData?.adminStatus === "PENDING" && roleId == 1) ||
           (rowData?.superAdminStatus === "PENDING" && roleId == 3)) ? (
@@ -1950,8 +2068,8 @@ const ViewDetails = () => {
                 }}
                 className={
                   isFieldsEditable ||
-                  rowData?.first_Floor === "" ||
-                  rowData?.first_Floor === null
+                    rowData?.first_Floor === "" ||
+                    rowData?.first_Floor === null
                     ? ""
                     : styles.highlighted
                 }
@@ -1977,8 +2095,8 @@ const ViewDetails = () => {
                 }}
                 className={
                   isFieldsEditable ||
-                  rowData?.second_Floor === "" ||
-                  rowData?.second_Floor === null
+                    rowData?.second_Floor === "" ||
+                    rowData?.second_Floor === null
                     ? ""
                     : styles.highlighted
                 }
@@ -2004,8 +2122,8 @@ const ViewDetails = () => {
                 }}
                 className={
                   isFieldsEditable ||
-                  rowData?.third_floor === "" ||
-                  rowData?.third_floor === null
+                    rowData?.third_floor === "" ||
+                    rowData?.third_floor === null
                     ? ""
                     : styles.highlighted
                 }
@@ -2031,8 +2149,8 @@ const ViewDetails = () => {
                 }}
                 className={
                   isFieldsEditable ||
-                  rowData?.forth_Floor === "" ||
-                  rowData?.forth_Floor === null
+                    rowData?.forth_Floor === "" ||
+                    rowData?.forth_Floor === null
                     ? ""
                     : styles.highlighted
                 }
@@ -2058,8 +2176,8 @@ const ViewDetails = () => {
                 }}
                 className={
                   isFieldsEditable ||
-                  rowData?.fifth_Floor === "" ||
-                  rowData?.fifth_Floor === null
+                    rowData?.fifth_Floor === "" ||
+                    rowData?.fifth_Floor === null
                     ? ""
                     : styles.highlighted
                 }
@@ -2087,8 +2205,8 @@ const ViewDetails = () => {
                 }}
                 className={
                   isFieldsEditable ||
-                  rowData?.basement_Parking === "" ||
-                  rowData?.basement_Parking === null
+                    rowData?.basement_Parking === "" ||
+                    rowData?.basement_Parking === null
                     ? ""
                     : styles.highlighted
                 }
@@ -2116,8 +2234,8 @@ const ViewDetails = () => {
                 }}
                 className={
                   isFieldsEditable ||
-                  rowData?.front_Parking === "" ||
-                  rowData?.front_Parking === null
+                    rowData?.front_Parking === "" ||
+                    rowData?.front_Parking === null
                     ? ""
                     : styles.highlighted
                 }
@@ -2262,9 +2380,9 @@ const ViewDetails = () => {
                 }
                 onChange={handleFormDataChange}
                 ref={bEmailRef}
-                // onInput={(e) => {
-                //   e.target.value = e.target.value.replace(/[^0-9]/g, ""); // Remove non-numeric and non-decimal characters
-                // }}
+              // onInput={(e) => {
+              //   e.target.value = e.target.value.replace(/[^0-9]/g, ""); // Remove non-numeric and non-decimal characters
+              // }}
               />
             </div>
 
@@ -2319,9 +2437,9 @@ const ViewDetails = () => {
                 }
                 onChange={handleFormDataChange}
                 ref={LEmailRef}
-                // onInput={(e) => {
-                //   e.target.value = e.target.value.replace(/[^0-9]/g, ""); // Remove non-numeric and non-decimal characters
-                // }}
+              // onInput={(e) => {
+              //   e.target.value = e.target.value.replace(/[^0-9]/g, ""); // Remove non-numeric and non-decimal characters
+              // }}
               />
             </div>
 
@@ -3238,7 +3356,7 @@ const ViewDetails = () => {
           isModalOpen={viewRemarksModal}
           handleModalClose={handleViewRemarksModalClose}
           titleColor="#0d6efd"
-          // title={"Remarks"}
+        // title={"Remarks"}
         >
           <form className={styles.reject_form}>
             <div className={styles.reject_form_div}>
@@ -3268,140 +3386,140 @@ const ViewDetails = () => {
           width="50vw"
           height={isMobile ? "80vh" : "90vh"}
         >
-          {rowData?.status === "APPROVED" && ["4","5"].includes(roleId) ?  <AdditionalInfo {...{ rowData, previousLocation }} />:
-          <div className={styles.addproofs_container}>
-            <div className={styles.files_main_container}>
-              {proofsList.map((proof, index) => {
-                return (
-                  <div
-                    className={styles.file_container}
-                    key={index}
-                    style={{
-                      marginBottom:
-                        // proofFiles[proof.labelId]?.length > 0 ? "8rem" : "",
-                        isAccordionOpen[proof.labelId] &&
-                        proofFiles[proof.labelId]?.length > 0
-                          ? "8rem"
-                          : "0rem",
-                    }}
-                    onClick={() => toggleAccordion(proof.labelId)}
-                  >
-                    <label>
-                      {proof.label}
-                      {proof.required && (
-                        <span className={styles.required}>*</span>
-                      )}
-                    </label>
+          {rowData?.status === status.PENDING_FROM_LEGAL && ["4", "5"].includes(roleId) ? <AdditionalInfo {...{ rowData, previousLocation }} /> :
+            <div className={styles.addproofs_container}>
+              <div className={styles.files_main_container}>
+                {proofsList.map((proof, index) => {
+                  return (
+                    <div
+                      className={styles.file_container}
+                      key={index}
+                      style={{
+                        marginBottom:
+                          // proofFiles[proof.labelId]?.length > 0 ? "8rem" : "",
+                          isAccordionOpen[proof.labelId] &&
+                            proofFiles[proof.labelId]?.length > 0
+                            ? "8rem"
+                            : "0rem",
+                      }}
+                      onClick={() => toggleAccordion(proof.labelId)}
+                    >
+                      <label>
+                        {proof.label}
+                        {proof.required && (
+                          <span className={styles.required}>*</span>
+                        )}
+                      </label>
 
-                    {updatedSampleFiles[index].isSampleFileAvailable && (
-                      <button
-                        className={styles.view_sample_btn}
-                        onClick={() => handleSampleModalOpen(proof.label)}
-                      >
-                        View Sample
-                      </button>
-                    )}
-
-                    <div className={styles.file}>
-                      <small>
-                        {proofFiles[proof.labelId].length === 0
-                          ? "No file selected"
-                          : proofFiles[proof.labelId].length === 1
-                          ? proofFiles[proof.labelId][0].name
-                          : `${proofFiles[proof.labelId].length} files`}
-                      </small>
-
-                      <label htmlFor={proof.labelId}>{proof.icon}</label>
-
-                      <input
-                        type="file"
-                        id={proof.labelId}
-                        onChange={handleProofsInputChange}
-                        multiple
-                      />
-                    </div>
-
-                    {/* Accordion to show selected files */}
-                    {isAccordionOpen[proof.labelId] &&
-                      proofFiles[proof.labelId]?.length > 0 && (
-                        <div
-                          className={styles.accordion}
-                          // onClick={handleAccordionClick}
-                          onClick={(e) => e.stopPropagation()}
+                      {updatedSampleFiles[index].isSampleFileAvailable && (
+                        <button
+                          className={styles.view_sample_btn}
+                          onClick={() => handleSampleModalOpen(proof.label)}
                         >
-                          {proofFiles[proof.labelId].map((file, idx) => {
-                            const fileURL = URL.createObjectURL(file);
-                            return (
-                              <div
-                                key={idx}
-                                className={styles.accordion_file}
-                                onClick={(e) =>
-                                  openFileInScreen(
-                                    e,
-                                    proof.labelId,
-                                    fileURL,
-                                    idx
-                                  )
-                                }
-                              >
-                                {file.type.includes("image") ? (
-                                  <img
-                                    src={fileURL}
-                                    alt={file.name}
-                                    width="40"
-                                    height="40"
-                                    className="acc_files"
-                                  />
-                                ) : file.type.includes("video") ? (
-                                  <video
-                                    width="40"
-                                    height="40"
-                                    src={fileURL}
-                                    className="acc_files"
-                                  />
-                                ) : (
-                                  <FaFile
-                                    fontSize={"1.5rem"}
-                                    className="acc_files"
-                                    title="No preview available"
-                                  />
-                                )}
-
-                                <span
-                                  className={styles.delete_icon}
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    deleteFileAccordion(e, proof.labelId, idx);
-                                  }}
-                                >
-                                  {/* <MdDelete /> */}
-                                  <ImCross />
-                                </span>
-                              </div>
-                            );
-                          })}
-                        </div>
+                          View Sample
+                        </button>
                       )}
-                  </div>
-                );
-              })}
-            </div>
 
-            <button
-              type="button"
-              className={styles.addProofs_submit_btn}
-              onClick={handleAddProofsSubmit}
-              // disabled={rowData?.siteType !== "BTS" && !notProofFiles}
-              style={{
-                cursor: "pointer",
-                // rowData?.siteType !== "BTS" && !notProofFiles
-                //   ? "not-allowed"
-                //   : "pointer",
-              }}
-            >
-              Submit
-            </button>
-          </div>}
+                      <div className={styles.file}>
+                        <small>
+                          {proofFiles[proof.labelId].length === 0
+                            ? "No file selected"
+                            : proofFiles[proof.labelId].length === 1
+                              ? proofFiles[proof.labelId][0].name
+                              : `${proofFiles[proof.labelId].length} files`}
+                        </small>
+
+                        <label htmlFor={proof.labelId}>{proof.icon}</label>
+
+                        <input
+                          type="file"
+                          id={proof.labelId}
+                          onChange={handleProofsInputChange}
+                          multiple
+                        />
+                      </div>
+
+                      {/* Accordion to show selected files */}
+                      {isAccordionOpen[proof.labelId] &&
+                        proofFiles[proof.labelId]?.length > 0 && (
+                          <div
+                            className={styles.accordion}
+                            // onClick={handleAccordionClick}
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            {proofFiles[proof.labelId].map((file, idx) => {
+                              const fileURL = URL.createObjectURL(file);
+                              return (
+                                <div
+                                  key={idx}
+                                  className={styles.accordion_file}
+                                  onClick={(e) =>
+                                    openFileInScreen(
+                                      e,
+                                      proof.labelId,
+                                      fileURL,
+                                      idx
+                                    )
+                                  }
+                                >
+                                  {file.type.includes("image") ? (
+                                    <img
+                                      src={fileURL}
+                                      alt={file.name}
+                                      width="40"
+                                      height="40"
+                                      className="acc_files"
+                                    />
+                                  ) : file.type.includes("video") ? (
+                                    <video
+                                      width="40"
+                                      height="40"
+                                      src={fileURL}
+                                      className="acc_files"
+                                    />
+                                  ) : (
+                                    <FaFile
+                                      fontSize={"1.5rem"}
+                                      className="acc_files"
+                                      title="No preview available"
+                                    />
+                                  )}
+
+                                  <span
+                                    className={styles.delete_icon}
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      deleteFileAccordion(e, proof.labelId, idx);
+                                    }}
+                                  >
+                                    {/* <MdDelete /> */}
+                                    <ImCross />
+                                  </span>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        )}
+                    </div>
+                  );
+                })}
+              </div>
+
+              <button
+                type="button"
+                className={styles.addProofs_submit_btn}
+                onClick={handleAddProofsSubmit}
+                // disabled={rowData?.siteType !== "BTS" && !notProofFiles}
+                style={{
+                  cursor: "pointer",
+                  // rowData?.siteType !== "BTS" && !notProofFiles
+                  //   ? "not-allowed"
+                  //   : "pointer",
+                }}
+              >
+                Submit
+              </button>
+            </div>}
         </ReusableModal>
       )}
 
@@ -3438,7 +3556,7 @@ const ViewDetails = () => {
           handleCloseCarousel={handleViewProofsCarouselClose}
           apiFiles={siteProofs}
           siteID={rowData?.siteID}
-          isAdditioinal={isAdditioinal}
+          docUploadType={docUploadType}
         />
       )}
 
@@ -3455,7 +3573,167 @@ const ViewDetails = () => {
           setIsShowProofFilesClicked={setIsSampleModalOpen}
         />
       )}
+
+      {legalApproveModal && (
+        <ReusableModal
+          isModalOpen={legalApproveModal}
+          handleModalClose={handleApproveModalClose}
+          title={legalApproveData.reject ? "Legal Reject Form" : "Legal Approve Form"}
+          height="50vh"
+          width="50vw"
+          titleColor="#0d6efd"
+        >
+          <form>
+            <div className="files_main_container">
+              <label htmlFor="approveRemarks">Remarks</label>
+              <div>
+                <textarea
+                  name=""
+                  id="remark"
+                  cols="25"
+                  rows="5"
+                  value={legalApproveData.legalRemarks}
+                  onChange={handleLegalApproveFormChange}
+                  style={{ width: '100%' }}
+                ></textarea>
+              </div>
+              {!legalApproveData.reject && <div style={{ marginTop: 10, marginBottom: 10 }} className={styles2.files_main_container}>
+                <div
+                  className={styles2.file_container}
+                  style={{
+                    marginBottom:
+                      legalApproveData?.legalApproveFile?.length >
+                        0
+                        ? "8rem"
+                        : "0rem",
+                  }}
+                  onClick={() =>
+                    setToggleAccordionLegal(pre => !pre)
+                  }
+                >
+                  <label>
+                    Legal Documents
+                  </label>
+
+                  <div className={styles2.file}>
+                    <small>
+                      {legalApproveData?.legalApproveFile
+                        .length === 0
+                        ? "No file selected"
+                        : legalApproveData?.legalApproveFile
+                          .length === 1
+                          ? legalApproveData?.legalApproveFile[0]
+                            .name
+                          : `${legalApproveData?.legalApproveFile
+                            .length
+                          } files`}
+                    </small>
+
+                    <label htmlFor="legalApproveFile">
+                      <FaFileImage color="#29c071" />
+                    </label>
+
+                    <input
+                      type="file"
+                      id="legalApproveFile"
+                      onChange={handleLegalApproveFileChange}
+                      multiple
+                    />
+
+                  </div>
+                  {/* Accordion to show selected files */}
+                  {
+                    legalApproveData?.legalApproveFile?.length > 0 && (
+                      <div
+                        className={styles2.accordion}
+                        // onClick={handleAccordionClick}
+                        onClick={(e) =>
+                          e.stopPropagation()
+                        }
+                      >
+                        {legalApproveData?.legalApproveFile?.map(
+                          (file, idx) => {
+                            const fileURL =
+                              URL.createObjectURL(file);
+                            return (
+                              <div
+                                key={idx}
+                                className={
+                                  styles2.accordion_file
+                                }
+                                onClick={(e) =>
+                                  openFileInScreen(
+                                    e,
+                                    proof.labelId,
+                                    fileURL,
+                                    idx
+                                  )
+                                }
+                              >
+                                {file.type.includes(
+                                  "image"
+                                ) ? (
+                                  <img
+                                    src={fileURL}
+                                    alt={file.name}
+                                    width="40"
+                                    height="40"
+                                    className="acc_files"
+                                  />
+                                ) : file.type.includes(
+                                  "video"
+                                ) ? (
+                                  <video
+                                    width="40"
+                                    height="40"
+                                    src={fileURL}
+                                    className="acc_files"
+                                  />
+                                ) : (
+                                  <FaFile
+                                    fontSize={"1.5rem"}
+                                    className="acc_files"
+                                    title="No preview available"
+                                  />
+                                )}
+
+                                <span
+                                  className={
+                                    styles2.delete_icon
+                                  }
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    deleteFileAccordionLegal(
+                                      e,
+                                      idx
+                                    );
+                                  }}
+                                >
+                                  <ImCross />
+                                </span>
+                              </div>
+                            );
+                          }
+                        )}
+                      </div>
+                    )}
+
+                </div>
+              </div>}
+            </div>
+
+            <button
+              type="button"
+              className={styles.approve_form_submit}
+              onClick={() => handleLegalDocuementSubmit(!legalApproveData.reject)}
+            >
+              Submit
+            </button>
+          </form>
+        </ReusableModal>
+      )}
     </div>
+
   );
 };
 

@@ -18,7 +18,7 @@ const Sidebar = ({ handleSidebarClose }) => {
     {label: "All", icon: <CiBoxList/>, url: "/all", roles: [...Object.values(roleIds)]},
     {label: "Appr/Pend List", icon: <FaRegListAlt/>, url: "/approval-list", roles: []},
     {label: "Pending", icon: <MdOutlinePending/>, url: "/pending", roles: [
-      roleIds.SUPER_ADMIN, roleIds.ADMIN, roleIds.LEGAL, roleIds.RM
+      roleIds.SUPER_ADMIN, roleIds.ADMIN, roleIds.RM
     ]},
     {label: "Pen Admin", icon: <MdOutlinePending/>, url: "/penAdmList", roles: [
       roleIds.SUPER_ADMIN, roleIds.ADMIN, roleIds.RM

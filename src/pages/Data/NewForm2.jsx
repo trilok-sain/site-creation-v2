@@ -13,6 +13,7 @@ import FilesCarousel from "../../components/FilesCarousel";
 import { FaFile } from "react-icons/fa";
 import { ImCross } from "react-icons/im";
 import FilesCarouselPublic from "../../components/FilesCarouselPublic";
+import { roleIds } from "../../utilities/constants";
 
 const NewForm2 = ({
   addNewFormModal,
@@ -78,10 +79,11 @@ const NewForm2 = ({
   const [infoModal, setInfoModal] = useState(false);
   const [loading, setLoading] = useState(false);
   const roleId = sessionStorage.getItem("roleId");
-
   const [suggestions, setSuggestions] = useState([]);
   const [stateNamesList, setStateNamesList] = useState([]);
   const isReadOnly = ["4", "5"].includes(roleId);
+  const isLandlord = roleId == roleIds.LANDLORD;
+  const isBroker = roleId == roleIds.BROKER
   const {
     register,
     formState: { errors },
@@ -95,9 +97,11 @@ const NewForm2 = ({
     watch,
   } = useForm({
     defaultValues: {
-      brokerEmail: roleId === "4" ? loginUserEmail : "",
-      landlordEmail: roleId === "5" ? loginUserEmail : "",
-      roleType: roleId === "5" ? "landlord" : "broker"
+      brokerEmail: isBroker ? loginUserEmail : "",
+      landlordEmail: isLandlord ? loginUserEmail : "",
+      roleType: isLandlord ? "landlord" : "broker",
+      brokerName: isBroker ? firstName : "",
+      landlordName: isLandlord ? firstName : ""
     }
   });
   let siteType = watch("siteType");
@@ -493,8 +497,6 @@ const NewForm2 = ({
 
     const formData1 = new FormData();
 
-    console.log("----------------", { data });
-
 
     const fieldsToAppend = [
       // { field: "State", value: data?.stateName.label },
@@ -533,8 +535,8 @@ const NewForm2 = ({
       { field: "Road_Condition", value: data?.roadCondition },
       { field: "SiteId", value: 0 },
       { field: "ForUpdate", value: false },
-      { field: "Createdby", value: sessionStorage.getItem("id") || "" },
-      { field: "RM_Name", value: ["4", "5"].includes(roleId) ? data.approvedName || "": sessionStorage.getItem("id") || "" },
+      { field: "Createdby", value: sessionStorage.getItem("id") || ""},
+      { field: "RM_Name", value: [roleIds.BROKER, roleIds.LANDLORD].includes(roleId) ? data.approvedName || "": id || "" },
       // { field: "Createdby", value: data.approvedName || "" },
       // { field: "RM_Name", value: data.approvedName || "" },
       { field: "PropertyCeilingHeight", value: data.propertyCeilHeight || 0 },
@@ -1534,7 +1536,7 @@ const NewForm2 = ({
                       <div className="mb-3 col-12 col-sm-4 col-md-2">
                         <label className="form-label" htmlFor="frontParking">
                           Front Parking (sqft)
-                          <span style={{ color: "red" }}>*</span>
+                          {/* <span style={{ color: "red" }}>*</span> */}
                         </label>
                         <input
                           className={`form-control ${errors.TotalError ? "is-invalid" : ""
@@ -1573,7 +1575,7 @@ const NewForm2 = ({
                           htmlFor="googleCoordinates"
                         >
                           Google Coordinates:
-                          <span style={{ color: "red" }}>*</span>
+                          {/* <span style={{ color: "red" }}>*</span> */}
                         </label>
                         <input
                           className={`form-control ${errors.googleCoordinates ? "is-invalid" : ""
